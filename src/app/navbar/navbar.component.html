@@ -1,0 +1,38 @@
+<mat-toolbar color="primary">
+  <span class="title">FINEALTH</span>
+  <span class="spacer"></span>
+  <button mat-icon-button aria-label="home icon" (click)="onHomeIconClick()">
+    <mat-icon>home</mat-icon>
+  </button>
+
+  <button
+    mat-icon-button
+    aria-label="login icon"
+    (click)="onAccountIconClick()"
+  >
+    <mat-icon>person</mat-icon>
+  </button>
+
+  <button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button
+      mat-menu-item
+      aria-label="movements button"
+      (click)="onMovementsIconClick()"
+    >
+      <mat-icon class="theme-color">attach_money</mat-icon>
+      <span>MOVIMENTI</span>
+    </button>
+
+    <button
+      mat-menu-item
+      aria-label="categories button"
+      (click)="onCategoriesIconClick()"
+    >
+      <mat-icon class="theme-color">list</mat-icon>
+      <span>CATEGORIE</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>
