@@ -1,0 +1,11 @@
+<app-page-title-bar [title]="this.pageTitle"></app-page-title-bar>
+
+<div class="main-content">
+  <app-table
+  [headerVisible]="false"
+  [entities$]="this.categories$"
+  [columns]="this.displayedColumns"
+  (onEditEntityEvent)="this.OnEditCategory($event)"
+  (onDeleteEntityEvent)="this.OnDeleteCategory($event)"
+  ></app-table>
+</div>
