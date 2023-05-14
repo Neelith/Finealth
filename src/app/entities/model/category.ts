@@ -1,5 +1,7 @@
-export interface Category {
-  categoryId : number;
-  name : string;
-  iconUrl : string;
+export class Category {
+  public categoryId! : number;
+  public name : string = '';
+  public iconUrl : string = '';
+
+  constructor(){}
 }

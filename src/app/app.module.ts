@@ -5,10 +5,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from "./navbar/navbar.component";
-import { PageTitleBarComponent } from './page-title-bar/page-title-bar.component';
 import { NotificationService } from './services/notification/notification.service';
 import { MaterialModule } from './material/material.module';
-import { TableComponent } from './generic/table/table.component';
+import { NgxIndexedDBModule } from 'ngx-indexed-db';
+import { indexedDbConfig } from './indexedDb/indexedDbConfig';
 
 @NgModule({
     declarations: [
@@ -21,7 +21,8 @@ import { TableComponent } from './generic/table/table.component';
         AppRoutingModule,
         MaterialModule,
         BrowserAnimationsModule,
-        NavbarComponent
+        NavbarComponent,
+        NgxIndexedDBModule.forRoot(indexedDbConfig)
     ]
 })
 export class AppModule { }

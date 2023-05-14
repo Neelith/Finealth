@@ -1,0 +1,30 @@
+.category-image {
+  max-width: 48px;
+  max-height: 48px;
+}
+
+.theme-color {
+  color: #009688;
+}
+
+.delete-color {
+  color: white;
+}
+
+.delete-button {
+  background-color: red;
+}
+
+.delete-button:hover {
+  background-color: rgb(223, 20, 20);
+}
+
+
+.table {
+  border: 1px solid lightgray;
+}
+
+table td,
+table th {
+  padding: 16px 16px;
+}

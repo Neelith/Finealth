@@ -47,8 +47,10 @@
     ><tr mat-header-row *matHeaderRowDef="columns"></tr
   ></ng-container>
   <tr mat-row *matRowDef="let row; columns: columns"></tr>
+
 </table>
-<mat-paginator
+<!-- <mat-paginator
   [pageSizeOptions]="[10, 25, 50]"
+  [pageSize]="10"
   showFirstLastButtons
-></mat-paginator>
+></mat-paginator> -->
