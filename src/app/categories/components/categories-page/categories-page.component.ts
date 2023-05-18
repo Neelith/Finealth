@@ -51,6 +51,7 @@ export class CategoriesPageComponent {
           value: category.categoryId,
           disabled: true,
         }),
+        hidden: true,
       },
       {
         formControlName: 'categoryName',
@@ -58,10 +59,12 @@ export class CategoriesPageComponent {
           Validators.required,
           Validators.maxLength(100),
         ]),
+        hidden: false,
       },
       {
         formControlName: 'categoryIconUrl',
         formControl: new FormControl(category.iconUrl, [Validators.required]),
+        hidden: false,
       },
     ];
 

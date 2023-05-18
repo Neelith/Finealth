@@ -28,6 +28,7 @@ export class EditFormComponent {
       formControlsConfig[formControlDescriptor.formControlName] = formControlDescriptor.formControl;
     }
     this.form = this.fb.group(formControlsConfig);
+
   }
 
   getIconLabel(icon: string): string {

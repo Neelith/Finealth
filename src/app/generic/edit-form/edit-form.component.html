@@ -1,7 +1,7 @@
 <form *ngIf="editFormEnabled" [formGroup]="form">
   <ng-container *ngFor="let formControlDescriptor of formControlDescriptors">
     <mat-form-field appearance="outline">
-      <!-- <mat-label>{{ formControl.formControlName }}</mat-label> -->
+      <mat-label>{{ formControlDescriptor.formControlName }}</mat-label>
       <input
         matInput
         type="text"
