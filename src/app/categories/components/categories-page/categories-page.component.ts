@@ -5,22 +5,34 @@ import { PageTitleBarComponent } from 'src/app/page-title-bar/page-title-bar.com
 import { Category } from 'src/app/entities/model/category';
 import { Observable, of } from 'rxjs';
 import { CategoryRepositoryService } from '../../services/category-repository/category-repository.service';
+import { EditFormComponent } from '../../../generic/edit-form/edit-form.component';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormControlDescriptor } from 'src/app/entities/dto/FormControlDescriptor';
 
 @Component({
   selector: 'app-categories-page',
   standalone: true,
-  imports: [CommonModule, TableComponent, PageTitleBarComponent],
   providers: [CategoryRepositoryService],
   templateUrl: './categories-page.component.html',
   styleUrls: ['./categories-page.component.scss'],
+  imports: [
+    CommonModule,
+    TableComponent,
+    PageTitleBarComponent,
+    EditFormComponent,
+  ],
 })
 export class CategoriesPageComponent {
   pageTitle: string = 'Categorie';
-  categories$: Observable<Category[]> =
-    this.categoryRepository.getAll();
+  categories$: Observable<Category[]> = this.categoryRepository.getAll();
   displayedColumns: string[] = ['categoryId', 'name', 'actions'];
+  editFormControlDescriptors: FormControlDescriptor[] = [];
+  editFormEnabled: boolean = false;
 
-  constructor(private categoryRepository: CategoryRepositoryService) {}
+  constructor(
+    private categoryRepository: CategoryRepositoryService,
+    private formBuilder: FormBuilder
+  ) {}
 
   showAddCategoryForm() {
     let category: Category = new Category();
@@ -32,9 +44,31 @@ export class CategoriesPageComponent {
   }
 
   OnEditCategory(category: Category) {
-    category.name = 'testoneModificato';
-    this.categoryRepository.edit(category).subscribe();
-    this.categories$ = this.categoryRepository.getAll();
+    this.editFormControlDescriptors = [
+      {
+        formControlName: 'categoryId',
+        formControl: new FormControl({
+          value: category.categoryId,
+          disabled: true,
+        }),
+      },
+      {
+        formControlName: 'categoryName',
+        formControl: new FormControl(category.name, [
+          Validators.required,
+          Validators.maxLength(100),
+        ]),
+      },
+      {
+        formControlName: 'categoryIconUrl',
+        formControl: new FormControl(category.iconUrl, [Validators.required]),
+      },
+    ];
+
+    this.editFormEnabled = true;
+
+    // this.categoryRepository.edit(category).subscribe();
+    // this.categories$ = this.categoryRepository.getAll();
   }
 
   OnDeleteCategory(category: Category) {

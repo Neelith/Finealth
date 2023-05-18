@@ -11,6 +11,7 @@ import { MaterialModule } from 'src/app/material/material.module';
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent{
+  @Input() tableEnabled : boolean = true;
   @Input() imgColumnEnabled: boolean = false;
   @Input() actionsColumnEnabled: boolean = false;
   @Input() headerVisible : boolean = true;

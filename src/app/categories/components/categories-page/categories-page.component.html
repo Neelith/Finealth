@@ -5,10 +5,17 @@
 
 <div class="main-content">
   <app-table
+    [tableEnabled]="!editFormEnabled"
     [headerVisible]="false"
     [entities$]="this.categories$"
     [columns]="this.displayedColumns"
     (onEditEntityEvent)="this.OnEditCategory($event)"
     (onDeleteEntityEvent)="this.OnDeleteCategory($event)"
   ></app-table>
+  <ng-container *ngIf="editFormEnabled"
+    ><app-edit-form
+      [editFormEnabled]="editFormEnabled"
+      [formControlDescriptors]="editFormControlDescriptors"
+    ></app-edit-form
+  ></ng-container>
 </div>
