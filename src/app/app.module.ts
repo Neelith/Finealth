@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from "./navbar/navbar.component";
-import { NotificationService } from './services/notification/notification.service';
 import { MaterialModule } from './material/material.module';
 import { NgxIndexedDBModule } from 'ngx-indexed-db';
 import { indexedDbConfig } from './indexedDb/indexedDbConfig';
@@ -14,7 +13,7 @@ import { indexedDbConfig } from './indexedDb/indexedDbConfig';
     declarations: [
         AppComponent
     ],
-    providers: [NotificationService],
+    providers: [],
     bootstrap: [AppComponent],
     imports: [
         BrowserModule,

@@ -1,0 +1,41 @@
+<form [formGroup]="form">
+  <ng-container *ngFor="let formControlDescriptor of formControlDescriptors">
+    <mat-form-field
+      appearance="outline"
+      *ngIf="
+        formControlDescriptor.formControlName !== 'iconUrl' &&
+        !formControlDescriptor.hidden
+      "
+    >
+      <mat-label>{{ formControlDescriptor.label }}</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="{{ formControlDescriptor.formControlName }}"
+      />
+    </mat-form-field>
+    <!-- valutare se fare un for per tipologia, da aggiungere a FormControlDescriptor ex. tipologia "Text" fa un semplice input, "Date" fa un datepicker, ecc-->
+    <ng-container *ngIf="formControlDescriptor.formControlName === 'iconUrl'">
+      <mat-form-field appearance="outline">
+        <mat-label>Icona</mat-label>
+        <mat-select name="iconUrl" formControlName="iconUrl">
+          <mat-option *ngFor="let icon of iconUrls" [value]="icon">
+            <img class="image" matListItemAvatar [src]="icon" alt="icon" />
+            <p class="text">{{ getIconLabel(icon) }}</p>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+  </ng-container>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="form.invalid"
+    (click)="onSubmitFormEvent()"
+  >
+    {{ submitButtonText }}
+  </button>
+  <button mat-raised-button (click)="onCancelFormEvent()">
+    {{ cancelButtonText }}
+  </button>
+</form>

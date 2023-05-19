@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditFormComponent } from './edit-form.component';
+import { CuFormComponent } from './cu-form.component';
 
-describe('EditFormComponent', () => {
-  let component: EditFormComponent;
-  let fixture: ComponentFixture<EditFormComponent>;
+describe('CuFormComponent', () => {
+  let component: CuFormComponent;
+  let fixture: ComponentFixture<CuFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ EditFormComponent ]
+      imports: [ CuFormComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EditFormComponent);
+    fixture = TestBed.createComponent(CuFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

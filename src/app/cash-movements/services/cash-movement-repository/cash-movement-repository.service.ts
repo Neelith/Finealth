@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { Category } from 'src/app/entities/model/Category';
+import { CashMovement } from 'src/app/entities/model/Cash-Movement';
 import { RepositoryService } from 'src/app/services/repository/repository.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class CategoryRepositoryService extends RepositoryService<Category> {
-
+export class CashMovementRepositoryService extends RepositoryService<CashMovement> {
   constructor(dbService: NgxIndexedDBService) {
-    super('Categories', dbService);
+    super('CashMovements', dbService);
   }
 }

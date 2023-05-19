@@ -1,6 +1,6 @@
 <app-page-title-bar
   [title]="this.pageTitle"
-  (onAddEvent)="this.showAddCategoryForm()"
+  (onAddEvent)="this.showAddMovementForm()"
 ></app-page-title-bar>
 
 <div class="main-content">
@@ -8,19 +8,18 @@
     <app-table
       [tableEnabled]="!editFormEnabled"
       [headerVisible]="false"
-      [entities$]="this.categories$"
+      [entities$]="this.movements$"
       [columns]="this.displayedColumns"
-      (onEditEntityEvent)="this.showEditCategoryForm($event)"
-      (onDeleteEntityEvent)="this.deleteCategory($event)"
+      (onEditEntityEvent)="this.showEditMovementForm($event)"
+      (onDeleteEntityEvent)="this.deleteMovement($event)"
     ></app-table>
   </ng-container>
 
   <ng-container *ngIf="addFormEnabled"
     ><app-cu-form
       [formControlDescriptors]="addFormControlDescriptors"
-      [iconUrls]="this.iconUrls"
       [submitButtonText]="'Inserisci'"
-      (submitFormEvent)="addCategory($event)"
+      (submitFormEvent)="addMovement($event)"
       (cancelFormEvent)="onCancelAddForm()"
     ></app-cu-form
   ></ng-container>
@@ -28,9 +27,8 @@
   <ng-container *ngIf="editFormEnabled"
     ><app-cu-form
       [formControlDescriptors]="editFormControlDescriptors"
-      [iconUrls]="this.iconUrls"
       [submitButtonText]="'Modifica'"
-      (submitFormEvent)="editCategory($event)"
+      (submitFormEvent)="editMovement($event)"
       (cancelFormEvent)="onCancelEditForm()"
     ></app-cu-form
   ></ng-container>

@@ -5,4 +5,5 @@ export interface FormControlDescriptor
   formControlName : string;
   formControl : FormControl;
   hidden : boolean;
+  label : string;
 }
