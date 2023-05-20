@@ -43,8 +43,8 @@
     >
       <mat-form-field appearance="outline">
         <mat-label>Icona</mat-label>
-        <mat-select name="iconUrl" formControlName="iconUrl">
-          <mat-option *ngFor="let icon of iconUrls" [value]="icon">
+        <mat-select formControlName="{{ formControlDescriptor.formControlName }}">
+          <mat-option *ngFor="let icon of formControlDescriptor.selectOptions" [value]="icon">
             <img class="image" matListItemAvatar [src]="icon" alt="icon" />
             <p class="text">{{ getIconLabel(icon) }}</p>
           </mat-option>
@@ -53,7 +53,7 @@
     </ng-container>
 
   </ng-container>
-  
+
   <button
     mat-raised-button
     color="primary"

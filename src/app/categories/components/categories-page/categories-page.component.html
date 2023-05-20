@@ -18,7 +18,6 @@
   <ng-container *ngIf="addFormEnabled"
     ><app-cu-form
       [formControlDescriptors]="addFormControlDescriptors"
-      [iconUrls]="this.iconUrls"
       [submitButtonText]="'Inserisci'"
       (submitFormEvent)="addCategory($event)"
       (cancelFormEvent)="onCancelAddForm()"
@@ -28,7 +27,6 @@
   <ng-container *ngIf="editFormEnabled"
     ><app-cu-form
       [formControlDescriptors]="editFormControlDescriptors"
-      [iconUrls]="this.iconUrls"
       [submitButtonText]="'Modifica'"
       (submitFormEvent)="editCategory($event)"
       (cancelFormEvent)="onCancelEditForm()"

@@ -7,4 +7,5 @@ export interface FormControlDescriptor
   hidden : boolean;
   label : string;
   type: 'Text' | 'Date' | 'IconSelect';
+  selectOptions? : string[] | null;
 }

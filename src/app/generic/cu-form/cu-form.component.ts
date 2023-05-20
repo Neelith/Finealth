@@ -13,7 +13,6 @@ import { MaterialModule } from 'src/app/material/material.module';
 })
 export class CuFormComponent {
   @Input() formControlDescriptors: FormControlDescriptor[] = [];
-  @Input() iconUrls?: string[];
   @Input() submitButtonText: string = 'Submit';
   @Input() cancelButtonText: string = 'Cancella';
   @Output() submitFormEvent = new EventEmitter<FormGroup>();

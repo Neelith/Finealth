@@ -34,7 +34,6 @@ export class CategoriesPageComponent {
   addFormEnabled: boolean = false;
   editFormControlDescriptors: FormControlDescriptor[] = [];
   editFormEnabled: boolean = false;
-  iconUrls: string[] = this.iconService.getIconUrls();
 
   constructor(
     private categoryRepository: CategoryRepositoryService,
@@ -60,7 +59,8 @@ export class CategoriesPageComponent {
         formControl: new FormControl('', [Validators.required]),
         hidden: false,
         label: 'Icona',
-        type: 'IconSelect'
+        type: 'IconSelect',
+        selectOptions: this.iconService.getIconUrls()
       },
     ];
 
@@ -112,7 +112,8 @@ export class CategoriesPageComponent {
         formControl: new FormControl(category.iconUrl, [Validators.required]),
         hidden: false,
         label: 'Icona',
-        type: 'IconSelect'
+        type: 'IconSelect',
+        selectOptions: this.iconService.getIconUrls()
       },
     ];
 
