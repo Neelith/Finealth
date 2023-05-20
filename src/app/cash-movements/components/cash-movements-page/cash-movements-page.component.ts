@@ -22,7 +22,11 @@ import { CategoryMapperService } from '../../services/category-mapper/category-m
     PageTitleBarComponent,
     CuFormComponent,
   ],
-  providers: [CashMovementRepositoryService, NotificationService, CategoryMapperService],
+  providers: [
+    CashMovementRepositoryService,
+    NotificationService,
+    CategoryMapperService,
+  ],
   templateUrl: './cash-movements-page.component.html',
   styleUrls: ['./cash-movements-page.component.scss'],
 })
@@ -39,7 +43,7 @@ export class CashMovementsPageComponent {
     private movementsRepository: CashMovementRepositoryService,
     private dialog: MatDialog,
     private notificationService: NotificationService,
-    private categoryMapper : CategoryMapperService
+    private categoryMapper: CategoryMapperService
   ) {}
 
   async showAddMovementForm() {
@@ -49,42 +53,44 @@ export class CashMovementsPageComponent {
         formControl: new FormControl('', [Validators.maxLength(100)]),
         hidden: false,
         label: 'Descrizione',
-        type: 'Text'
+        type: 'Text',
       },
       {
         formControlName: 'date',
         formControl: new FormControl('', [Validators.required]),
         hidden: false,
         label: 'Data',
-        type: 'Date'
+        type: 'Date',
       },
       {
         formControlName: 'amount',
         formControl: new FormControl('', [Validators.required]),
         hidden: false,
         label: 'Ammontare',
-        type: 'Text'
+        type: 'Text',
       },
       {
-        formControlName: 'categoryId',
+        formControlName: 'categoryName',
         formControl: new FormControl('', [Validators.required]),
         hidden: false,
         label: 'Categoria',
         type: 'Select',
-        selectOptions: await this.categoryMapper.getCategoryNames()
+        selectOptions: await this.categoryMapper.getCategoryNames(),
       },
     ];
 
     this.addFormEnabled = true;
   }
 
-  addMovement(form: FormGroup) {
+  async addMovement(form: FormGroup) {
     this.addFormEnabled = false;
 
     if (form.valid) {
       let movement: CashMovement = new CashMovement();
       movement.amount = form.value.amount;
-      movement.categoryId = form.value.categoryId;
+      movement.categoryId = await this.categoryMapper.getCategoryIdFromName(
+        form.value.categoryName
+      );
       movement.date = form.value.date;
       movement.description = form.value.description;
 
@@ -92,8 +98,6 @@ export class CashMovementsPageComponent {
       this.notificationService.notifySuccess(
         'Movimento aggiunto con successo!'
       );
-    } else {
-      this.notificationService.notifyFailure('Qualcosa è andato storto!');
     }
 
     this.movements$ = this.movementsRepository.getAll();
@@ -103,62 +107,70 @@ export class CashMovementsPageComponent {
     this.editFormControlDescriptors = [
       {
         formControlName: 'cashMovementId',
-        formControl: new FormControl(movement.cashMovementId, [Validators.required, Validators.maxLength(100)]),
+        formControl: new FormControl(movement.cashMovementId, [
+          Validators.required,
+          Validators.maxLength(100),
+        ]),
         hidden: true,
         label: 'Movimento',
-        type: 'Text'
+        type: 'Text',
       },
       {
         formControlName: 'description',
-        formControl: new FormControl(movement.description, [Validators.maxLength(100)]),
+        formControl: new FormControl(movement.description, [
+          Validators.maxLength(100),
+        ]),
         hidden: false,
         label: 'Descrizione',
-        type: 'Text'
+        type: 'Text',
       },
       {
         formControlName: 'date',
         formControl: new FormControl(movement.date, [Validators.required]),
         hidden: false,
         label: 'Data',
-        type: 'Date'
+        type: 'Date',
       },
       {
         formControlName: 'amount',
         formControl: new FormControl(movement.amount, [Validators.required]),
         hidden: false,
         label: 'Ammontare',
-        type: 'Text'
+        type: 'Text',
       },
       {
-        formControlName: 'categoryId',
-        formControl: new FormControl(movement.categoryId, [Validators.required]),
+        formControlName: 'categoryName',
+        formControl: new FormControl(
+          await this.categoryMapper.getNameFromCategoryId(movement.categoryId),
+          [Validators.required]
+        ),
         hidden: false,
         label: 'Categoria',
         type: 'Select',
-        selectOptions: await this.categoryMapper.getCategoryNames()
+        selectOptions: await this.categoryMapper.getCategoryNames(),
       },
     ];
 
     this.editFormEnabled = true;
   }
 
-  editMovement(form: FormGroup) {
+  async editMovement(form: FormGroup) {
     this.editFormEnabled = false;
 
     if (form.valid) {
       let movement: CashMovement = {
         cashMovementId: form.value.cashMovementId,
-        categoryId: form.value.categoryId,
+        categoryId: await this.categoryMapper.getCategoryIdFromName(
+          form.value.categoryName
+        ),
         amount: form.value.amount,
         description: form.value.description,
-        date: form.value.date
+        date: form.value.date,
       };
       this.movementsRepository.edit(movement).subscribe();
       this.notificationService.notifySuccess(
         'Movimento modificato con successo!'
       );
-    } else {
-      this.notificationService.notifyFailure('Qualcosa è andato storto!');
     }
 
     this.movements$ = this.movementsRepository.getAll();
@@ -175,20 +187,16 @@ export class CashMovementsPageComponent {
           this.notificationService.notifySuccess(
             'Movimento eliminato con successo!'
           );
-        } else {
-          this.notificationService.notifyFailure('Operazione annullata.');
         }
       });
   }
 
   onCancelEditForm() {
     this.editFormEnabled = false;
-    this.notificationService.notifyFailure('Operazione annullata.');
   }
 
   onCancelAddForm() {
     this.addFormEnabled = false;
-    this.notificationService.notifyFailure('Operazione annullata.');
   }
 
   showTable() {
