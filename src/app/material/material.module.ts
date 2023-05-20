@@ -18,6 +18,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, MAT_NATIVE_DATE_FORMATS, MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [],
@@ -42,6 +43,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatSnackBarModule,
     MatPaginatorModule,
     MatSortModule,
+    MatNativeDateModule
   ],
   exports: [
     MatToolbarModule,
@@ -64,5 +66,9 @@ import { MatSortModule } from '@angular/material/sort';
     MatPaginatorModule,
     MatSortModule,
   ],
+  providers:[
+    { provide: MAT_DATE_LOCALE, useValue: 'it' },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS },
+  ]
 })
 export class MaterialModule {}

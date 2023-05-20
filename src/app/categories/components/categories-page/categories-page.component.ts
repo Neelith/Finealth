@@ -53,12 +53,14 @@ export class CategoriesPageComponent {
         ]),
         hidden: false,
         label: 'Nome',
+        type: 'Text'
       },
       {
         formControlName: 'iconUrl',
         formControl: new FormControl('', [Validators.required]),
         hidden: false,
         label: 'Icona',
+        type: 'Text'
       },
     ];
 
@@ -93,6 +95,7 @@ export class CategoriesPageComponent {
         }),
         hidden: true,
         label: 'Categoria',
+        type: 'Text'
       },
       {
         formControlName: 'name',
@@ -102,12 +105,14 @@ export class CategoriesPageComponent {
         ]),
         hidden: false,
         label: 'Nome',
+        type: 'Text'
       },
       {
         formControlName: 'iconUrl',
         formControl: new FormControl(category.iconUrl, [Validators.required]),
         hidden: false,
         label: 'Icona',
+        type: 'Text'
       },
     ];
 

@@ -6,4 +6,5 @@ export interface FormControlDescriptor
   formControl : FormControl;
   hidden : boolean;
   label : string;
+  type: 'Text' | 'Date';
 }

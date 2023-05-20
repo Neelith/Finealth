@@ -47,24 +47,28 @@ export class CashMovementsPageComponent {
         formControl: new FormControl('', [Validators.maxLength(100)]),
         hidden: false,
         label: 'Descrizione',
+        type: 'Text'
       },
       {
         formControlName: 'date',
         formControl: new FormControl('', [Validators.required]),
         hidden: false,
         label: 'Data',
+        type: 'Date'
       },
       {
         formControlName: 'amount',
         formControl: new FormControl('', [Validators.required]),
         hidden: false,
         label: 'Ammontare',
+        type: 'Text'
       },
       {
         formControlName: 'categoryId',
         formControl: new FormControl('', [Validators.required]),
         hidden: false,
         label: 'Categoria',
+        type: 'Text'
       },
     ];
 
@@ -99,30 +103,35 @@ export class CashMovementsPageComponent {
         formControl: new FormControl(movement.cashMovementId, [Validators.required, Validators.maxLength(100)]),
         hidden: true,
         label: 'Movimento',
+        type: 'Text'
       },
       {
         formControlName: 'description',
         formControl: new FormControl(movement.description, [Validators.maxLength(100)]),
         hidden: false,
         label: 'Descrizione',
+        type: 'Text'
       },
       {
         formControlName: 'date',
         formControl: new FormControl(movement.date, [Validators.required]),
         hidden: false,
         label: 'Data',
+        type: 'Date'
       },
       {
         formControlName: 'amount',
         formControl: new FormControl(movement.amount, [Validators.required]),
         hidden: false,
         label: 'Ammontare',
+        type: 'Text'
       },
       {
         formControlName: 'categoryId',
         formControl: new FormControl(movement.categoryId, [Validators.required]),
         hidden: false,
         label: 'Categoria',
+        type: 'Text'
       },
     ];
 
