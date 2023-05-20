@@ -42,11 +42,27 @@
       "
     >
       <mat-form-field appearance="outline">
-        <mat-label>Icona</mat-label>
+        <mat-label>{{ formControlDescriptor.label }}</mat-label>
         <mat-select formControlName="{{ formControlDescriptor.formControlName }}">
           <mat-option *ngFor="let icon of formControlDescriptor.selectOptions" [value]="icon">
             <img class="image" matListItemAvatar [src]="icon" alt="icon" />
             <p class="text">{{ getIconLabel(icon) }}</p>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container
+      *ngIf="
+        !formControlDescriptor.hidden &&
+        formControlDescriptor.type === 'Select'
+      "
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>{{ formControlDescriptor.label }}</mat-label>
+        <mat-select formControlName="{{ formControlDescriptor.formControlName }}">
+          <mat-option *ngFor="let option of formControlDescriptor.selectOptions" [value]="option">
+            <p class="text">{{ option }}</p>
           </mat-option>
         </mat-select>
       </mat-form-field>

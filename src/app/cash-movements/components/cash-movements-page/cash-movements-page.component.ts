@@ -11,6 +11,7 @@ import { CashMovementRepositoryService } from '../../services/cash-movement-repo
 import { CuFormComponent } from 'src/app/generic/cu-form/cu-form.component';
 import { TableComponent } from 'src/app/generic/table/table.component';
 import { PageTitleBarComponent } from 'src/app/page-title-bar/page-title-bar.component';
+import { CategoryMapperService } from '../../services/category-mapper/category-mapper.service';
 
 @Component({
   selector: 'app-cash-movements-page',
@@ -21,7 +22,7 @@ import { PageTitleBarComponent } from 'src/app/page-title-bar/page-title-bar.com
     PageTitleBarComponent,
     CuFormComponent,
   ],
-  providers: [CashMovementRepositoryService, NotificationService],
+  providers: [CashMovementRepositoryService, NotificationService, CategoryMapperService],
   templateUrl: './cash-movements-page.component.html',
   styleUrls: ['./cash-movements-page.component.scss'],
 })
@@ -37,10 +38,11 @@ export class CashMovementsPageComponent {
   constructor(
     private movementsRepository: CashMovementRepositoryService,
     private dialog: MatDialog,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private categoryMapper : CategoryMapperService
   ) {}
 
-  showAddMovementForm() {
+  async showAddMovementForm() {
     this.addFormControlDescriptors = [
       {
         formControlName: 'description',
@@ -68,7 +70,8 @@ export class CashMovementsPageComponent {
         formControl: new FormControl('', [Validators.required]),
         hidden: false,
         label: 'Categoria',
-        type: 'Text'
+        type: 'Select',
+        selectOptions: await this.categoryMapper.getCategoryNames()
       },
     ];
 
@@ -96,7 +99,7 @@ export class CashMovementsPageComponent {
     this.movements$ = this.movementsRepository.getAll();
   }
 
-  showEditMovementForm(movement: CashMovement) {
+  async showEditMovementForm(movement: CashMovement) {
     this.editFormControlDescriptors = [
       {
         formControlName: 'cashMovementId',
@@ -131,7 +134,8 @@ export class CashMovementsPageComponent {
         formControl: new FormControl(movement.categoryId, [Validators.required]),
         hidden: false,
         label: 'Categoria',
-        type: 'Text'
+        type: 'Select',
+        selectOptions: await this.categoryMapper.getCategoryNames()
       },
     ];
 

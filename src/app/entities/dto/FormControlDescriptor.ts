@@ -6,6 +6,6 @@ export interface FormControlDescriptor
   formControl : FormControl;
   hidden : boolean;
   label : string;
-  type: 'Text' | 'Date' | 'IconSelect';
+  type: 'Text' | 'Date' | 'Select' | 'IconSelect';
   selectOptions? : string[] | null;
 }
