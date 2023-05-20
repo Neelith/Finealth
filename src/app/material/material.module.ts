@@ -67,7 +67,7 @@ import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, MAT_NATIVE_DATE_FORMATS, MatNativeDa
     MatSortModule,
   ],
   providers:[
-    { provide: MAT_DATE_LOCALE, useValue: 'IT' },
+    { provide: MAT_DATE_LOCALE, useValue: 'it-IT' },
     { provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS },
   ]
 })
