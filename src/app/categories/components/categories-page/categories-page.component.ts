@@ -60,7 +60,7 @@ export class CategoriesPageComponent {
         formControl: new FormControl('', [Validators.required]),
         hidden: false,
         label: 'Icona',
-        type: 'Text'
+        type: 'IconSelect'
       },
     ];
 
@@ -112,7 +112,7 @@ export class CategoriesPageComponent {
         formControl: new FormControl(category.iconUrl, [Validators.required]),
         hidden: false,
         label: 'Icona',
-        type: 'Text'
+        type: 'IconSelect'
       },
     ];
 
