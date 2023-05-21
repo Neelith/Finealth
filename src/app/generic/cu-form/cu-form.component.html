@@ -44,9 +44,9 @@
       <mat-form-field appearance="outline">
         <mat-label>{{ formControlDescriptor.label }}</mat-label>
         <mat-select formControlName="{{ formControlDescriptor.formControlName }}">
-          <mat-option *ngFor="let icon of formControlDescriptor.selectOptions" [value]="icon">
-            <img class="image" matListItemAvatar [src]="icon" alt="icon" />
-            <p class="text">{{ getIconLabel(icon) }}</p>
+          <mat-option *ngFor="let iconSelectOptionKey of this.getIconSelectOptionKeys(formControlDescriptor.iconSelectOptions)" [value]="this.getValueFromOptions(formControlDescriptor.iconSelectOptions, iconSelectOptionKey)">
+            <img class="image" matListItemAvatar [src]="this.getSrcFromOptions(formControlDescriptor.iconSelectOptions, iconSelectOptionKey)" alt="icon" />
+            <p class="text">{{ iconSelectOptionKey }}</p>
           </mat-option>
         </mat-select>
       </mat-form-field>

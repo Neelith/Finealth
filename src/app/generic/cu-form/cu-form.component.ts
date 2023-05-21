@@ -1,15 +1,16 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, KeyValue } from '@angular/common';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { FormControlDescriptor } from 'src/app/entities/dto/FormControlDescriptor';
 import { MaterialModule } from 'src/app/material/material.module';
+import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
 
 @Component({
   selector: 'app-cu-form',
   standalone: true,
   imports: [CommonModule, MaterialModule],
   templateUrl: './cu-form.component.html',
-  styleUrls: ['./cu-form.component.scss']
+  styleUrls: ['./cu-form.component.scss'],
 })
 export class CuFormComponent {
   @Input() formControlDescriptors: FormControlDescriptor[] = [];
@@ -38,23 +39,29 @@ export class CuFormComponent {
     this.submitFormEvent.emit(this.form);
   }
 
-  onCancelFormEvent(){
+  onCancelFormEvent() {
     this.cancelFormEvent.emit();
   }
 
-  getIconLabel(iconUrl: string): string {
-    const lastSlashIndex = iconUrl.lastIndexOf('/');
-    const lastDotIndex = iconUrl.lastIndexOf('.');
-    let iconLabel = iconUrl.slice(lastSlashIndex + 1, lastDotIndex);
+  getIconSelectOptionKeys(
+    options: IconSelectOption<any>[] | null | undefined
+  ) {
+    if (Array.isArray(options)) return options.map((option) => option.label);
 
-    // Replace all '-' and '_' characters with a whitespace
-    iconLabel = iconLabel.replace(/[-_]/g, ' ');
+    return null;
+  }
 
-    // Remove the word 'icon' from the label
-    iconLabel = iconLabel.replace(/icons8/g, '');
-    iconLabel = iconLabel.replace(/icon/g, '');
-    iconLabel = iconLabel.replace(/64/g, '');
+  getSrcFromOptions(
+    options: IconSelectOption<any>[] | null | undefined,
+    selectedOptionLabel: string
+  ) {
+    return options?.find((option) => option.label === selectedOptionLabel)?.src;
+  }
 
-    return iconLabel;
+  getValueFromOptions(
+    options: IconSelectOption<any>[] | null | undefined,
+    selectedOptionLabel: string
+  ) {
+    return options?.find((option) => option.label === selectedOptionLabel)?.value;
   }
 }

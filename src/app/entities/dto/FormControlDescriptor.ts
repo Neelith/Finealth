@@ -1,4 +1,7 @@
+import { KeyValue } from "@angular/common";
+import { NgIterable } from "@angular/core";
 import { FormControl } from "@angular/forms";
+import { IconSelectOption } from "./IconSelectOption";
 
 export interface FormControlDescriptor
 {
@@ -8,4 +11,5 @@ export interface FormControlDescriptor
   label : string;
   type: 'Text' | 'Date' | 'Select' | 'IconSelect';
   selectOptions? : string[] | null;
+  iconSelectOptions? : IconSelectOption<string>[] | null;
 }
