@@ -5,14 +5,21 @@
 
 <div class="main-content">
   <ng-container *ngIf="showTable()">
-    <app-table
+    <!-- <app-table
       [tableEnabled]="!editFormEnabled"
       [headerVisible]="false"
       [entities$]="this.movements$"
       [columns]="this.displayedColumns"
       (onEditEntityEvent)="this.showEditMovementForm($event)"
       (onDeleteEntityEvent)="this.deleteMovement($event)"
-    ></app-table>
+    ></app-table> -->
+    <app-r-table
+      [headerVisible]="false"
+      [entities$]="this.movements$"
+      [columns]="this.displayedColumns"
+      (onEditEntityEvent)="this.showEditMovementForm($event)"
+      (onDeleteEntityEvent)="this.deleteMovement($event)"
+    ></app-r-table>
   </ng-container>
 
   <ng-container *ngIf="addFormEnabled"

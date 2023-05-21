@@ -12,6 +12,8 @@ import { CuFormComponent } from 'src/app/generic/cu-form/cu-form.component';
 import { TableComponent } from 'src/app/generic/table/table.component';
 import { PageTitleBarComponent } from 'src/app/page-title-bar/page-title-bar.component';
 import { CategoryMapperService } from '../../services/category-mapper/category-mapper.service';
+import { RTableComponent } from 'src/app/generic/r-table/r-table.component';
+import { TableColumnDescriptor } from 'src/app/entities/dto/TableColumnDescriptor';
 
 @Component({
   selector: 'app-cash-movements-page',
@@ -21,6 +23,7 @@ import { CategoryMapperService } from '../../services/category-mapper/category-m
     TableComponent,
     PageTitleBarComponent,
     CuFormComponent,
+    RTableComponent
   ],
   providers: [
     CashMovementRepositoryService,
@@ -33,7 +36,12 @@ import { CategoryMapperService } from '../../services/category-mapper/category-m
 export class CashMovementsPageComponent {
   pageTitle: string = 'Movimenti';
   movements$: Observable<CashMovement[]> = this.movementsRepository.getAll();
-  displayedColumns: string[] = ['date', 'description', 'amount', 'actions'];
+  displayedColumns: TableColumnDescriptor[] = [
+    { field: 'date', header: 'Data', type: 'date' },
+    { field: 'description', header: 'Descrizione', type: 'text' },
+    { field: 'amount', header: 'Ammontare', type: 'currency'},
+    { field: 'actions', header: 'Azioni', type: 'actions' }
+  ];
   addFormControlDescriptors: FormControlDescriptor[] = [];
   addFormEnabled: boolean = false;
   editFormControlDescriptors: FormControlDescriptor[] = [];
