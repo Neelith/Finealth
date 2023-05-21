@@ -70,12 +70,13 @@ export class CashMovementsPageComponent {
         type: 'Text',
       },
       {
-        formControlName: 'categoryName',
+        formControlName: 'categoryId',
         formControl: new FormControl('', [Validators.required]),
         hidden: false,
         label: 'Categoria',
-        type: 'Select',
-        selectOptions: await this.categoryMapper.getCategoryNames(),
+        type: 'IconSelect',
+        iconSelectOptions:
+          await this.categoryMapper.getIconSelectOptionsFromCategories(),
       },
     ];
 
@@ -88,9 +89,7 @@ export class CashMovementsPageComponent {
     if (form.valid) {
       let movement: CashMovement = new CashMovement();
       movement.amount = form.value.amount;
-      movement.categoryId = await this.categoryMapper.getCategoryIdFromName(
-        form.value.categoryName
-      );
+      movement.categoryId = form.value.categoryId;
       movement.date = form.value.date;
       movement.description = form.value.description;
 
@@ -139,15 +138,16 @@ export class CashMovementsPageComponent {
         type: 'Text',
       },
       {
-        formControlName: 'categoryName',
+        formControlName: 'categoryId',
         formControl: new FormControl(
-          await this.categoryMapper.getNameFromCategoryId(movement.categoryId),
+          movement.categoryId,
           [Validators.required]
         ),
         hidden: false,
         label: 'Categoria',
-        type: 'Select',
-        selectOptions: await this.categoryMapper.getCategoryNames(),
+        type: 'IconSelect',
+        iconSelectOptions:
+          await this.categoryMapper.getIconSelectOptionsFromCategories(),
       },
     ];
 
@@ -160,9 +160,7 @@ export class CashMovementsPageComponent {
     if (form.valid) {
       let movement: CashMovement = {
         cashMovementId: form.value.cashMovementId,
-        categoryId: await this.categoryMapper.getCategoryIdFromName(
-          form.value.categoryName
-        ),
+        categoryId: form.value.categoryId,
         amount: form.value.amount,
         description: form.value.description,
         date: form.value.date,

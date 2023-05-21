@@ -11,5 +11,5 @@ export interface FormControlDescriptor
   label : string;
   type: 'Text' | 'Date' | 'Select' | 'IconSelect';
   selectOptions? : string[] | null;
-  iconSelectOptions? : IconSelectOption<string>[] | null;
+  iconSelectOptions? : IconSelectOption<any>[] | null;
 }
