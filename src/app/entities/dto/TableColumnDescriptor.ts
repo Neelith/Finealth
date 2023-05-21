@@ -4,5 +4,4 @@ export interface TableColumnDescriptor {
   type: 'text' | 'date' | 'number' | 'actions' | 'currency' | 'icon';
   currencySymbol? : string;
   dateFormat? : string;
-  imgSrc? : string;
 }

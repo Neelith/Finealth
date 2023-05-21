@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule, KeyValue } from '@angular/common';
-import { TableComponent } from 'src/app/generic/table/table.component';
+import { CommonModule } from '@angular/common';
 import { PageTitleBarComponent } from 'src/app/page-title-bar/page-title-bar.component';
 import { Category } from 'src/app/entities/model/Category';
 import { Observable } from 'rxjs';
@@ -13,6 +12,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DDialogComponent } from 'src/app/generic/d-dialog/d-dialog.component';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
+import { TableColumnDescriptor } from 'src/app/entities/dto/TableColumnDescriptor';
+import { RTableComponent } from 'src/app/generic/r-table/r-table.component';
 
 @Component({
   selector: 'app-categories-page',
@@ -22,7 +23,7 @@ import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
   styleUrls: ['./categories-page.component.scss'],
   imports: [
     CommonModule,
-    TableComponent,
+    RTableComponent,
     PageTitleBarComponent,
     CuFormComponent,
   ],
@@ -30,11 +31,15 @@ import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
 export class CategoriesPageComponent {
   pageTitle: string = 'Categorie';
   categories$: Observable<Category[]> = this.categoryRepository.getAll();
-  displayedColumns: string[] = ['entityImg', 'name', 'actions'];
   addFormControlDescriptors: FormControlDescriptor[] = [];
   addFormEnabled: boolean = false;
   editFormControlDescriptors: FormControlDescriptor[] = [];
   editFormEnabled: boolean = false;
+  displayedColumns: TableColumnDescriptor[] = [
+    { field: 'iconUrl', header: 'Icon', type: 'icon' },
+    { field: 'name', header: 'Nome', type: 'text' },
+    { field: 'actions', header: 'Azioni', type: 'actions' }
+  ];
 
   constructor(
     private categoryRepository: CategoryRepositoryService,
@@ -42,6 +47,7 @@ export class CategoriesPageComponent {
     private dialog: MatDialog,
     private notificationService: NotificationService
   ) {}
+
 
   showAddCategoryForm() {
     this.addFormControlDescriptors = [

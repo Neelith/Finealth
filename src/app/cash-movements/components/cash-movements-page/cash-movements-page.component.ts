@@ -9,7 +9,6 @@ import { DDialogComponent } from 'src/app/generic/d-dialog/d-dialog.component';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { CashMovementRepositoryService } from '../../services/cash-movement-repository/cash-movement-repository.service';
 import { CuFormComponent } from 'src/app/generic/cu-form/cu-form.component';
-import { TableComponent } from 'src/app/generic/table/table.component';
 import { PageTitleBarComponent } from 'src/app/page-title-bar/page-title-bar.component';
 import { CategoryMapperService } from '../../services/category-mapper/category-mapper.service';
 import { RTableComponent } from 'src/app/generic/r-table/r-table.component';
@@ -20,7 +19,6 @@ import { TableColumnDescriptor } from 'src/app/entities/dto/TableColumnDescripto
   standalone: true,
   imports: [
     CommonModule,
-    TableComponent,
     PageTitleBarComponent,
     CuFormComponent,
     RTableComponent
@@ -36,16 +34,16 @@ import { TableColumnDescriptor } from 'src/app/entities/dto/TableColumnDescripto
 export class CashMovementsPageComponent {
   pageTitle: string = 'Movimenti';
   movements$: Observable<CashMovement[]> = this.movementsRepository.getAll();
+  addFormControlDescriptors: FormControlDescriptor[] = [];
+  addFormEnabled: boolean = false;
+  editFormControlDescriptors: FormControlDescriptor[] = [];
+  editFormEnabled: boolean = false;
   displayedColumns: TableColumnDescriptor[] = [
     { field: 'date', header: 'Data', type: 'date' },
     { field: 'description', header: 'Descrizione', type: 'text' },
     { field: 'amount', header: 'Ammontare', type: 'currency'},
     { field: 'actions', header: 'Azioni', type: 'actions' }
   ];
-  addFormControlDescriptors: FormControlDescriptor[] = [];
-  addFormEnabled: boolean = false;
-  editFormControlDescriptors: FormControlDescriptor[] = [];
-  editFormEnabled: boolean = false;
 
   constructor(
     private movementsRepository: CashMovementRepositoryService,

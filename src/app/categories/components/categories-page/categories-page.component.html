@@ -5,14 +5,13 @@
 
 <div class="main-content">
   <ng-container *ngIf="showTable()">
-    <app-table
-      [tableEnabled]="!editFormEnabled"
+    <app-r-table
       [headerVisible]="false"
       [entities$]="this.categories$"
       [columns]="this.displayedColumns"
       (onEditEntityEvent)="this.showEditCategoryForm($event)"
       (onDeleteEntityEvent)="this.deleteCategory($event)"
-    ></app-table>
+    ></app-r-table>
   </ng-container>
 
   <ng-container *ngIf="addFormEnabled"
