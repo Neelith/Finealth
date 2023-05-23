@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CashMovement } from 'src/app/entities/model/Cash-Movement';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { FormControlDescriptor } from 'src/app/entities/dto/FormControlDescriptor';
 import { DDialogComponent } from 'src/app/generic/d-dialog/d-dialog.component';
 import { NotificationService } from 'src/app/services/notification/notification.service';
@@ -21,7 +21,7 @@ import { TableColumnDescriptor } from 'src/app/entities/dto/TableColumnDescripto
     CommonModule,
     PageTitleBarComponent,
     CuFormComponent,
-    RTableComponent
+    RTableComponent,
   ],
   providers: [
     CashMovementRepositoryService,
@@ -33,16 +33,17 @@ import { TableColumnDescriptor } from 'src/app/entities/dto/TableColumnDescripto
 })
 export class CashMovementsPageComponent {
   pageTitle: string = 'Movimenti';
-  movements$: Observable<CashMovement[]> = this.movementsRepository.getAll();
+  movements$: Observable<CashMovement[]>;
   addFormControlDescriptors: FormControlDescriptor[] = [];
   addFormEnabled: boolean = false;
   editFormControlDescriptors: FormControlDescriptor[] = [];
   editFormEnabled: boolean = false;
   displayedColumns: TableColumnDescriptor[] = [
+    { field: 'iconUrl', header: 'Icon', type: 'icon' },
     { field: 'date', header: 'Data', type: 'date' },
     { field: 'description', header: 'Descrizione', type: 'text' },
-    { field: 'amount', header: 'Ammontare', type: 'currency'},
-    { field: 'actions', header: 'Azioni', type: 'actions' }
+    { field: 'amount', header: 'Ammontare', type: 'currency' },
+    { field: 'actions', header: 'Azioni', type: 'actions' },
   ];
 
   constructor(
@@ -50,7 +51,18 @@ export class CashMovementsPageComponent {
     private dialog: MatDialog,
     private notificationService: NotificationService,
     private categoryMapper: CategoryMapperService
-  ) {}
+  ) {
+    this.movements$ = this.loadCashMovements();
+  }
+
+  private loadCashMovements(): Observable<CashMovement[]> {
+    return this.movementsRepository.getAll().pipe(
+      map((movements) => {
+        this.categoryMapper.mapCashMovementIconUrls(movements);
+        return movements;
+      })
+    );
+  }
 
   async showAddMovementForm() {
     this.addFormControlDescriptors = [
@@ -105,7 +117,7 @@ export class CashMovementsPageComponent {
       );
     }
 
-    this.movements$ = this.movementsRepository.getAll();
+    this.movements$ = this.loadCashMovements();
   }
 
   async showEditMovementForm(movement: CashMovement) {
@@ -145,10 +157,9 @@ export class CashMovementsPageComponent {
       },
       {
         formControlName: 'categoryId',
-        formControl: new FormControl(
-          movement.categoryId,
-          [Validators.required]
-        ),
+        formControl: new FormControl(movement.categoryId, [
+          Validators.required,
+        ]),
         hidden: false,
         label: 'Categoria',
         type: 'IconSelect',
@@ -177,7 +188,7 @@ export class CashMovementsPageComponent {
       );
     }
 
-    this.movements$ = this.movementsRepository.getAll();
+    this.movements$ = this.loadCashMovements();
   }
 
   deleteMovement(movement: CashMovement) {
@@ -187,7 +198,7 @@ export class CashMovementsPageComponent {
       .subscribe((result) => {
         if (result === true) {
           this.movementsRepository.delete(movement.cashMovementId).subscribe();
-          this.movements$ = this.movementsRepository.getAll();
+          this.movements$ = this.loadCashMovements();
           this.notificationService.notifySuccess(
             'Movimento eliminato con successo!'
           );

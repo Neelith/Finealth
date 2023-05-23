@@ -1,7 +1,10 @@
-export class Category {
+import { EntityView } from "../dto/EntityView";
+
+export class Category extends EntityView{
   public categoryId! : number;
   public name : string = '';
-  public iconUrl : string = '';
 
-  constructor(){}
+  constructor(){
+    super();
+  }
 }

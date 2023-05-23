@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom, map } from 'rxjs';
 import { CategoryRepositoryService } from 'src/app/categories/services/category-repository/category-repository.service';
 import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
+import { CashMovement } from 'src/app/entities/model/Cash-Movement';
+import { Category } from 'src/app/entities/model/Category';
 
 @Injectable({
   providedIn: 'root',
@@ -30,8 +32,21 @@ export class CategoryMapperService {
     const category = categories.find(
       (category) => category.categoryId === categoryId
     );
-    debugger;
     return category ? category.name : '';
+  }
+
+  async getIconUrlFromCategoryId(categoryId: number, categories : Category[]): Promise<string | undefined> {
+    const category = categories.find(
+      (category) => category.categoryId === categoryId
+    );
+    return category ? category.iconUrl : '';
+  }
+
+  async mapCashMovementIconUrls(movements : CashMovement[]){
+    const categories = await firstValueFrom(this.categoryRepository.getAll());
+    for (const movement of movements) {
+      movement.iconUrl = await this.getIconUrlFromCategoryId(movement.categoryId, categories);
+    }
   }
 
   async getIconSelectOptionsFromCategories(): Promise<

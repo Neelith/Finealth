@@ -1,5 +1,3 @@
-import { KeyValue } from "@angular/common";
-import { NgIterable } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { IconSelectOption } from "./IconSelectOption";
 

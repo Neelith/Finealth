@@ -1,9 +1,13 @@
-export class CashMovement {
+import { EntityView } from '../dto/EntityView';
+
+export class CashMovement extends EntityView {
   public cashMovementId!: number;
   public description: string = '';
   public date!: string;
   public amount: number = 0;
   public categoryId: number = 0;
 
-  public constructor() {}
+  public constructor() {
+    super();
+  }
 }
