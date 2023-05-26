@@ -1,18 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CashMovement } from 'src/app/entities/model/Cash-Movement';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, map } from 'rxjs';
+import { Observable, firstValueFrom, map } from 'rxjs';
 import { FormControlDescriptor } from 'src/app/entities/dto/FormControlDescriptor';
 import { DDialogComponent } from 'src/app/generic/d-dialog/d-dialog.component';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { CashMovementRepositoryService } from '../../services/cash-movement-repository/cash-movement-repository.service';
 import { CuFormComponent } from 'src/app/generic/cu-form/cu-form.component';
 import { PageTitleBarComponent } from 'src/app/page-title-bar/page-title-bar.component';
-import { CategoryMapperService } from '../../services/category-mapper/category-mapper.service';
 import { RTableComponent } from 'src/app/generic/r-table/r-table.component';
 import { TableColumnDescriptor } from 'src/app/entities/dto/TableColumnDescriptor';
+import { CashMovementView } from 'src/app/entities/views/Cash-Movement-View';
+import { CategoryRepositoryService } from 'src/app/categories/services/category-repository/category-repository.service';
+import { Category } from 'src/app/entities/model/Category';
+import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
 
 @Component({
   selector: 'app-cash-movements-page',
@@ -23,48 +26,64 @@ import { TableColumnDescriptor } from 'src/app/entities/dto/TableColumnDescripto
     CuFormComponent,
     RTableComponent,
   ],
-  providers: [
-    CashMovementRepositoryService,
-    NotificationService,
-    CategoryMapperService,
-  ],
+  providers: [CashMovementRepositoryService, NotificationService],
   templateUrl: './cash-movements-page.component.html',
   styleUrls: ['./cash-movements-page.component.scss'],
 })
-export class CashMovementsPageComponent {
+export class CashMovementsPageComponent implements OnInit {
   pageTitle: string = 'Movimenti';
-  movements$: Observable<CashMovement[]>;
+  movements$!: Observable<CashMovementView[]>;
   addFormControlDescriptors: FormControlDescriptor[] = [];
   addFormEnabled: boolean = false;
   editFormControlDescriptors: FormControlDescriptor[] = [];
   editFormEnabled: boolean = false;
   displayedColumns: TableColumnDescriptor[] = [
     { field: 'iconUrl', header: 'Icon', type: 'icon' },
+    { field: 'categoryName', header: 'Categoria', type: 'text' },
     { field: 'date', header: 'Data', type: 'date' },
     { field: 'description', header: 'Descrizione', type: 'text' },
     { field: 'amount', header: 'Ammontare', type: 'currency' },
     { field: 'actions', header: 'Azioni', type: 'actions' },
   ];
+  private categories: Category[] = [];
 
   constructor(
     private movementsRepository: CashMovementRepositoryService,
     private dialog: MatDialog,
     private notificationService: NotificationService,
-    private categoryMapper: CategoryMapperService
-  ) {
+    private categoryRepository: CategoryRepositoryService
+  ) {}
+
+  async ngOnInit() {
+    this.categories = await firstValueFrom(this.categoryRepository.getAll());
     this.movements$ = this.loadCashMovements();
   }
 
-  private loadCashMovements(): Observable<CashMovement[]> {
+  private loadCashMovements(): Observable<CashMovementView[]> {
     return this.movementsRepository.getAll().pipe(
       map((movements) => {
-        this.categoryMapper.mapCashMovementIconUrls(movements);
-        return movements;
+        let views: CashMovementView[] = [];
+
+        for (const movement of movements) {
+          const category = this.getCategoryById(movement.categoryId);
+
+          views.push({
+            cashMovementId: movement.cashMovementId,
+            description: movement.description,
+            date: movement.date,
+            amount: movement.amount,
+            categoryId: movement.categoryId,
+            categoryName: category ? category.name : '',
+            iconUrl: category ? category.iconUrl : '',
+          });
+        }
+
+        return views;
       })
     );
   }
 
-  async showAddMovementForm() {
+  showAddMovementForm() {
     this.addFormControlDescriptors = [
       {
         formControlName: 'description',
@@ -93,15 +112,16 @@ export class CashMovementsPageComponent {
         hidden: false,
         label: 'Categoria',
         type: 'IconSelect',
-        iconSelectOptions:
-          await this.categoryMapper.getIconSelectOptionsFromCategories(),
+        iconSelectOptions: this.getIconSelectOptionsFromCategories(
+          this.categories
+        ),
       },
     ];
 
     this.addFormEnabled = true;
   }
 
-  async addMovement(form: FormGroup) {
+  addMovement(form: FormGroup) {
     this.addFormEnabled = false;
 
     if (form.valid) {
@@ -120,7 +140,7 @@ export class CashMovementsPageComponent {
     this.movements$ = this.loadCashMovements();
   }
 
-  async showEditMovementForm(movement: CashMovement) {
+  showEditMovementForm(movement: CashMovement) {
     this.editFormControlDescriptors = [
       {
         formControlName: 'cashMovementId',
@@ -163,15 +183,16 @@ export class CashMovementsPageComponent {
         hidden: false,
         label: 'Categoria',
         type: 'IconSelect',
-        iconSelectOptions:
-          await this.categoryMapper.getIconSelectOptionsFromCategories(),
+        iconSelectOptions: this.getIconSelectOptionsFromCategories(
+          this.categories
+        ),
       },
     ];
 
     this.editFormEnabled = true;
   }
 
-  async editMovement(form: FormGroup) {
+  editMovement(form: FormGroup) {
     this.editFormEnabled = false;
 
     if (form.valid) {
@@ -191,7 +212,7 @@ export class CashMovementsPageComponent {
     this.movements$ = this.loadCashMovements();
   }
 
-  deleteMovement(movement: CashMovement) {
+  deleteMovement(movement: CashMovementView) {
     this.dialog
       .open(DDialogComponent)
       .afterClosed()
@@ -216,5 +237,26 @@ export class CashMovementsPageComponent {
 
   showTable() {
     return !this.editFormEnabled && !this.addFormEnabled;
+  }
+
+  private getCategoryById(categoryId: number) {
+    return this.categories.find(
+      (category) => category.categoryId === categoryId
+    );
+  }
+
+  private getIconSelectOptionsFromCategories(
+    categories: Category[]
+  ): IconSelectOption<number>[] {
+    let iconSelectOptions = [] as IconSelectOption<number>[];
+    for (const category of categories) {
+      iconSelectOptions.push({
+        label: category.name,
+        src: category.iconUrl,
+        value: category.categoryId,
+      });
+    }
+
+    return iconSelectOptions;
   }
 }

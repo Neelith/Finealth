@@ -1,6 +1,4 @@
-import { EntityView } from '../dto/EntityView';
-
-export class CashMovement extends EntityView {
+export class CashMovement{
   public cashMovementId!: number;
   public description: string = '';
   public date!: string;
@@ -8,6 +6,5 @@ export class CashMovement extends EntityView {
   public categoryId: number = 0;
 
   public constructor() {
-    super();
   }
 }
