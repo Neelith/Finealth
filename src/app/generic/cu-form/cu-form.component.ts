@@ -14,8 +14,8 @@ import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
 })
 export class CuFormComponent {
   @Input() formControlDescriptors: FormControlDescriptor[] = [];
-  @Input() submitButtonText: string = 'Submit';
-  @Input() cancelButtonText: string = 'Cancella';
+  @Input() submitButtonText: string = 'CONFERMA';
+  @Input() cancelButtonText: string = 'CANCELLA';
   @Output() submitFormEvent = new EventEmitter<FormGroup>();
   @Output() cancelFormEvent = new EventEmitter<void>();
   form!: FormGroup;
