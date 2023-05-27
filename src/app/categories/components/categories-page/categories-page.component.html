@@ -19,7 +19,7 @@
       [formControlDescriptors]="addFormControlDescriptors"
       [submitButtonText]="'Inserisci'"
       (submitFormEvent)="addCategory($event)"
-      (cancelFormEvent)="onCancelAddForm()"
+      (cancelFormEvent)="onCancelForm()"
     ></app-cu-form
   ></ng-container>
 
@@ -28,7 +28,7 @@
       [formControlDescriptors]="editFormControlDescriptors"
       [submitButtonText]="'Modifica'"
       (submitFormEvent)="editCategory($event)"
-      (cancelFormEvent)="onCancelEditForm()"
+      (cancelFormEvent)="onCancelForm()"
     ></app-cu-form
   ></ng-container>
 </div>

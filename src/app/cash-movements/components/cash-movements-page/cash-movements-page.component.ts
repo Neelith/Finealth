@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CashMovement } from 'src/app/entities/model/Cash-Movement';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, firstValueFrom, map } from 'rxjs';
+import { Observable, Subscription, firstValueFrom, map } from 'rxjs';
 import { FormControlDescriptor } from 'src/app/entities/dto/FormControlDescriptor';
 import { DDialogComponent } from 'src/app/generic/d-dialog/d-dialog.component';
 import { NotificationService } from 'src/app/services/notification/notification.service';
-import { CashMovementRepositoryService } from '../../services/cash-movement-repository/cash-movement-repository.service';
+import { CashMovementRepositoryService } from '../../../indexedDb/repositories/cash-movement-repository/cash-movement-repository.service';
 import { CuFormComponent } from 'src/app/generic/cu-form/cu-form.component';
 import { PageTitleBarComponent } from 'src/app/page-title-bar/page-title-bar.component';
 import { RTableComponent } from 'src/app/generic/r-table/r-table.component';
 import { TableColumnDescriptor } from 'src/app/entities/dto/TableColumnDescriptor';
 import { CashMovementView } from 'src/app/entities/views/Cash-Movement-View';
-import { CategoryRepositoryService } from 'src/app/categories/services/category-repository/category-repository.service';
+import { CategoryRepositoryService } from 'src/app/indexedDb/repositories/category-repository/category-repository.service';
 import { Category } from 'src/app/entities/model/Category';
 import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
 
@@ -30,7 +30,8 @@ import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
   templateUrl: './cash-movements-page.component.html',
   styleUrls: ['./cash-movements-page.component.scss'],
 })
-export class CashMovementsPageComponent implements OnInit {
+export class CashMovementsPageComponent implements OnInit, OnDestroy {
+
   pageTitle: string = 'Movimenti';
   movements$!: Observable<CashMovementView[]>;
   addFormControlDescriptors: FormControlDescriptor[] = [];
@@ -39,13 +40,12 @@ export class CashMovementsPageComponent implements OnInit {
   editFormEnabled: boolean = false;
   displayedColumns: TableColumnDescriptor[] = [
     { field: 'iconUrl', header: 'Icon', type: 'icon' },
-    { field: 'categoryName', header: 'Categoria', type: 'text' },
-    { field: 'date', header: 'Data', type: 'date' },
-    { field: 'description', header: 'Descrizione', type: 'text' },
     { field: 'amount', header: 'Ammontare', type: 'currency' },
     { field: 'actions', header: 'Azioni', type: 'actions' },
   ];
+
   private categories: Category[] = [];
+  private subscription: Subscription = new Subscription();
 
   constructor(
     private movementsRepository: CashMovementRepositoryService,
@@ -59,28 +59,8 @@ export class CashMovementsPageComponent implements OnInit {
     this.movements$ = this.loadCashMovements();
   }
 
-  private loadCashMovements(): Observable<CashMovementView[]> {
-    return this.movementsRepository.getAll().pipe(
-      map((movements) => {
-        let views: CashMovementView[] = [];
-
-        for (const movement of movements) {
-          const category = this.getCategoryById(movement.categoryId);
-
-          views.push({
-            cashMovementId: movement.cashMovementId,
-            description: movement.description,
-            date: movement.date,
-            amount: movement.amount,
-            categoryId: movement.categoryId,
-            categoryName: category ? category.name : '',
-            iconUrl: category ? category.iconUrl : '',
-          });
-        }
-
-        return views;
-      })
-    );
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   showAddMovementForm() {
@@ -94,7 +74,7 @@ export class CashMovementsPageComponent implements OnInit {
       },
       {
         formControlName: 'date',
-        formControl: new FormControl('', [Validators.required]),
+        formControl: new FormControl(new Date(), [Validators.required]),
         hidden: false,
         label: 'Data',
         type: 'Date',
@@ -119,6 +99,7 @@ export class CashMovementsPageComponent implements OnInit {
     ];
 
     this.addFormEnabled = true;
+    this.editFormEnabled = false;
   }
 
   addMovement(form: FormGroup) {
@@ -131,13 +112,21 @@ export class CashMovementsPageComponent implements OnInit {
       movement.date = form.value.date;
       movement.description = form.value.description;
 
-      this.movementsRepository.add(movement).subscribe();
-      this.notificationService.notifySuccess(
-        'Movimento aggiunto con successo!'
+      this.subscription.add(
+        this.movementsRepository.add(movement).subscribe({
+          next: () => {
+            this.notificationService.notifySuccess(
+              'Movimento aggiunto con successo!'
+            );
+
+            this.movements$ = this.loadCashMovements();
+          },
+          error: () => {
+            this.notificationService.notifyFailure('Qualcosa è andato storto!');
+          },
+        })
       );
     }
-
-    this.movements$ = this.loadCashMovements();
   }
 
   showEditMovementForm(movement: CashMovement) {
@@ -189,6 +178,7 @@ export class CashMovementsPageComponent implements OnInit {
       },
     ];
 
+    this.addFormEnabled = false;
     this.editFormEnabled = true;
   }
 
@@ -203,40 +193,85 @@ export class CashMovementsPageComponent implements OnInit {
         description: form.value.description,
         date: form.value.date,
       };
-      this.movementsRepository.edit(movement).subscribe();
-      this.notificationService.notifySuccess(
-        'Movimento modificato con successo!'
+
+      this.subscription.add(
+        this.movementsRepository.edit(movement).subscribe({
+          next: () => {
+            this.notificationService.notifySuccess(
+              'Movimento modificato con successo!'
+            );
+
+            this.movements$ = this.loadCashMovements();
+          },
+          error: () => {
+            this.notificationService.notifyFailure('Qualcosa è andato storto!');
+          },
+        })
       );
     }
-
-    this.movements$ = this.loadCashMovements();
   }
 
   deleteMovement(movement: CashMovementView) {
-    this.dialog
-      .open(DDialogComponent)
-      .afterClosed()
-      .subscribe((result) => {
-        if (result === true) {
-          this.movementsRepository.delete(movement.cashMovementId).subscribe();
-          this.movements$ = this.loadCashMovements();
-          this.notificationService.notifySuccess(
-            'Movimento eliminato con successo!'
-          );
-        }
-      });
+    this.subscription.add(
+      this.dialog
+        .open(DDialogComponent)
+        .afterClosed()
+        .subscribe((result) => {
+          if (result === true) {
+            this.subscription.add(
+              this.movementsRepository
+                .delete(movement.cashMovementId)
+                .subscribe({
+                  next: () => {
+                    this.notificationService.notifySuccess(
+                      'Movimento eliminato con successo!'
+                    );
+
+                    this.movements$ = this.loadCashMovements();
+                  },
+                  error: () => {
+                    this.notificationService.notifyFailure(
+                      'Qualcosa è andato storto!'
+                    );
+                  },
+                })
+            );
+          }
+        })
+    );
   }
 
-  onCancelEditForm() {
+  onCancelForm() {
     this.editFormEnabled = false;
-  }
-
-  onCancelAddForm() {
     this.addFormEnabled = false;
   }
 
   showTable() {
     return !this.editFormEnabled && !this.addFormEnabled;
+  }
+
+  private loadCashMovements(): Observable<CashMovementView[]> {
+    return this.movementsRepository.getAll().pipe(
+      map((movements) => {
+        let views: CashMovementView[] = [];
+
+        for (const movement of movements) {
+          const category = this.getCategoryById(movement.categoryId);
+
+          views.push({
+            cashMovementId: movement.cashMovementId,
+            description: movement.description,
+            date: movement.date,
+            amount: movement.amount,
+            categoryId: movement.categoryId,
+            categoryName: category ? category.name : '',
+            iconUrl: category ? category.iconUrl : '',
+          });
+        }
+
+        return views;
+      })
+    );
   }
 
   private getCategoryById(categoryId: number) {

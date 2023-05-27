@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageTitleBarComponent } from 'src/app/page-title-bar/page-title-bar.component';
 import { Category } from 'src/app/entities/model/Category';
-import { Observable } from 'rxjs';
-import { CategoryRepositoryService } from '../../services/category-repository/category-repository.service';
+import { Observable, Subscription } from 'rxjs';
+import { CategoryRepositoryService } from '../../../indexedDb/repositories/category-repository/category-repository.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormControlDescriptor } from 'src/app/entities/dto/FormControlDescriptor';
 import { IconService } from 'src/app/services/icon/icon.service';
@@ -28,9 +28,9 @@ import { RTableComponent } from 'src/app/generic/r-table/r-table.component';
     CuFormComponent,
   ],
 })
-export class CategoriesPageComponent {
+export class CategoriesPageComponent implements OnInit, OnDestroy {
   pageTitle: string = 'Categorie';
-  categories$: Observable<Category[]> = this.categoryRepository.getAll();
+  categories$!: Observable<Category[]>;
   addFormControlDescriptors: FormControlDescriptor[] = [];
   addFormEnabled: boolean = false;
   editFormControlDescriptors: FormControlDescriptor[] = [];
@@ -38,8 +38,10 @@ export class CategoriesPageComponent {
   displayedColumns: TableColumnDescriptor[] = [
     { field: 'iconUrl', header: 'Icon', type: 'icon' },
     { field: 'name', header: 'Nome', type: 'text' },
-    { field: 'actions', header: 'Azioni', type: 'actions' }
+    { field: 'actions', header: 'Azioni', type: 'actions' },
   ];
+
+  private subscription: Subscription = new Subscription();
 
   constructor(
     private categoryRepository: CategoryRepositoryService,
@@ -48,6 +50,13 @@ export class CategoriesPageComponent {
     private notificationService: NotificationService
   ) {}
 
+  ngOnInit() {
+    this.categories$ = this.categoryRepository.getAll();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 
   showAddCategoryForm() {
     this.addFormControlDescriptors = [
@@ -59,7 +68,7 @@ export class CategoriesPageComponent {
         ]),
         hidden: false,
         label: 'Nome',
-        type: 'Text'
+        type: 'Text',
       },
       {
         formControlName: 'iconUrl',
@@ -67,11 +76,14 @@ export class CategoriesPageComponent {
         hidden: false,
         label: 'Icona',
         type: 'IconSelect',
-        iconSelectOptions: this.getIconSelectOptions(this.iconService.getIconUrls())
+        iconSelectOptions: this.getIconSelectOptions(
+          this.iconService.getIconUrls()
+        ),
       },
     ];
 
     this.addFormEnabled = true;
+    this.editFormEnabled = false;
   }
 
   addCategory(form: FormGroup) {
@@ -81,15 +93,21 @@ export class CategoriesPageComponent {
       let category: Category = new Category();
       category.name = form.value.name;
       category.iconUrl = form.value.iconUrl;
-      this.categoryRepository.add(category).subscribe();
-      this.notificationService.notifySuccess(
-        'Categoria aggiunta con successo!'
-      );
-    } else {
-      this.notificationService.notifyFailure('Qualcosa è andato storto!');
-    }
 
-    this.categories$ = this.categoryRepository.getAll();
+      this.subscription.add(
+        this.categoryRepository.add(category).subscribe({
+          next: () => {
+            this.notificationService.notifySuccess(
+              'Categoria aggiunta con successo!'
+            );
+            this.categories$ = this.categoryRepository.getAll();
+          },
+          error: () => {
+            this.notificationService.notifyFailure('Qualcosa è andato storto!');
+          },
+        })
+      );
+    }
   }
 
   showEditCategoryForm(category: Category) {
@@ -102,7 +120,7 @@ export class CategoriesPageComponent {
         }),
         hidden: true,
         label: 'Categoria',
-        type: 'Text'
+        type: 'Text',
       },
       {
         formControlName: 'name',
@@ -112,7 +130,7 @@ export class CategoriesPageComponent {
         ]),
         hidden: false,
         label: 'Nome',
-        type: 'Text'
+        type: 'Text',
       },
       {
         formControlName: 'iconUrl',
@@ -120,10 +138,13 @@ export class CategoriesPageComponent {
         hidden: false,
         label: 'Icona',
         type: 'IconSelect',
-        iconSelectOptions: this.getIconSelectOptions(this.iconService.getIconUrls())
+        iconSelectOptions: this.getIconSelectOptions(
+          this.iconService.getIconUrls()
+        ),
       },
     ];
 
+    this.addFormEnabled = false;
     this.editFormEnabled = true;
   }
 
@@ -136,52 +157,67 @@ export class CategoriesPageComponent {
         name: form.value.name,
         iconUrl: form.value.iconUrl,
       };
-      this.categoryRepository.edit(category).subscribe();
-      this.notificationService.notifySuccess(
-        'Categoria modificata con successo!'
+      this.subscription.add(
+        this.categoryRepository.edit(category).subscribe({
+          next: () => {
+            this.notificationService.notifySuccess(
+              'Categoria modificata con successo!'
+            );
+            this.categories$ = this.categoryRepository.getAll();
+          },
+          error: () => {
+            this.notificationService.notifyFailure('Qualcosa è andato storto!');
+          },
+        })
       );
-    } else {
-      this.notificationService.notifyFailure('Qualcosa è andato storto!');
     }
-
-    this.categories$ = this.categoryRepository.getAll();
   }
 
   deleteCategory(category: Category) {
-    this.dialog
-      .open(DDialogComponent)
-      .afterClosed()
-      .subscribe((result) => {
-        if (result === true) {
-          this.categoryRepository.delete(category.categoryId).subscribe();
-          this.categories$ = this.categoryRepository.getAll();
-          this.notificationService.notifySuccess(
-            'Categoria eliminata con successo!'
-          );
-        } else {
-          this.notificationService.notifyFailure('Operazione annullata.');
-        }
-      });
+    this.subscription.add(
+      this.dialog
+        .open(DDialogComponent)
+        .afterClosed()
+        .subscribe((result) => {
+          if (result === true) {
+            this.subscription.add(
+              this.categoryRepository.delete(category.categoryId).subscribe({
+                next: () => {
+                  this.notificationService.notifySuccess(
+                    'Categoria eliminata con successo!'
+                  );
+
+                  this.categories$ = this.categoryRepository.getAll();
+                },
+                error: () => {
+                  this.notificationService.notifyFailure(
+                    'Qualcosa è andato storto.'
+                  );
+                },
+              })
+            );
+          }
+        })
+    );
   }
 
-  onCancelEditForm() {
+  onCancelForm() {
     this.editFormEnabled = false;
-    this.notificationService.notifyFailure('Operazione annullata.');
-  }
-
-  onCancelAddForm() {
     this.addFormEnabled = false;
-    this.notificationService.notifyFailure('Operazione annullata.');
   }
 
   showTable() {
     return !this.editFormEnabled && !this.addFormEnabled;
   }
 
-  private getIconSelectOptions(iconUrls : string[]) :  IconSelectOption<string>[]{
+  private getIconSelectOptions(iconUrls: string[]): IconSelectOption<string>[] {
     let keyValues = [] as IconSelectOption<string>[];
     for (const iconUrl of iconUrls) {
-      keyValues.push({ label: this.getIconLabel(iconUrl), src: iconUrl, value: iconUrl})
+      keyValues.push({
+        label: this.getIconLabel(iconUrl),
+        src: iconUrl,
+        value: iconUrl,
+      });
     }
 
     return keyValues;
