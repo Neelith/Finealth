@@ -1,0 +1,39 @@
+<div class="form">
+  <ng-container *ngFor="let detailsViewDescriptor of detailsViewDescriptors">
+    <ng-container
+      *ngIf="
+        !detailsViewDescriptor.hidden && detailsViewDescriptor.type === 'Text' && detailsViewDescriptor.value
+      "
+    >
+      <span class="subtitle">{{ detailsViewDescriptor.label }}</span>
+      <div class="view">{{ detailsViewDescriptor.value | uppercase}}</div>
+    </ng-container>
+
+    <ng-container
+      *ngIf="
+        !detailsViewDescriptor.hidden && detailsViewDescriptor.type === 'Date' && detailsViewDescriptor.value
+      "
+    >
+      <span class="subtitle">{{ detailsViewDescriptor.label }}</span>
+      <div class="view">{{ detailsViewDescriptor.value | date: detailsViewDescriptor.dateFormat? detailsViewDescriptor.dateFormat : "dd/MM/yyyy"}}</div>
+    </ng-container>
+
+    <ng-container
+      *ngIf="
+        !detailsViewDescriptor.hidden && detailsViewDescriptor.type === 'Currency' && detailsViewDescriptor.value
+      "
+    >
+      <span class="subtitle">{{ detailsViewDescriptor.label }}</span>
+      <div class="view">{{ detailsViewDescriptor.value | currency: detailsViewDescriptor.currencySymbol? detailsViewDescriptor.currencySymbol : "EUR"}}</div>
+    </ng-container>
+  </ng-container>
+
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onBackEvent()"
+  >
+    {{ backButtonText }}
+  </button>
+
+</div>

@@ -16,6 +16,8 @@ import { CashMovementView } from 'src/app/entities/views/Cash-Movement-View';
 import { CategoryRepositoryService } from 'src/app/indexedDb/repositories/category-repository/category-repository.service';
 import { Category } from 'src/app/entities/model/Category';
 import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
+import { GenericViewComponent } from 'src/app/generic/generic-view/generic-view.component';
+import { DetailViewDescriptor } from 'src/app/entities/dto/DetailViewDescriptor';
 
 @Component({
   selector: 'app-cash-movements-page',
@@ -25,6 +27,7 @@ import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
     PageTitleBarComponent,
     CuFormComponent,
     RTableComponent,
+    GenericViewComponent
   ],
   providers: [CashMovementRepositoryService, NotificationService],
   templateUrl: './cash-movements-page.component.html',
@@ -43,6 +46,8 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
     { field: 'amount', header: 'Ammontare', type: 'currency' },
     { field: 'actions', header: 'Azioni', type: 'actions' },
   ];
+  detailsViewEnabled: boolean = false;
+  detailsViewDescriptors : DetailViewDescriptor[] = [];
 
   private categories: Category[] = [];
   private subscription: Subscription = new Subscription();
@@ -61,6 +66,19 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  showMovementDetails(movement : CashMovementView){
+    this.detailsViewDescriptors = [
+      { hidden: false, label: 'Ammontare', value: movement.amount, type: 'Currency'},
+      { hidden: false, label: 'Categoria', value: movement.categoryName, type: 'Text'},
+      { hidden: false, label: 'Data', value: movement.date, type: 'Date'},
+      { hidden: false, label: 'Descrizione', value: movement.description, type: 'Text'},
+    ];
+
+    this.addFormEnabled = false;
+    this.editFormEnabled = false;
+    this.detailsViewEnabled = true;
   }
 
   showAddMovementForm() {
@@ -100,6 +118,7 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
 
     this.addFormEnabled = true;
     this.editFormEnabled = false;
+    this.detailsViewEnabled = false;
   }
 
   addMovement(form: FormGroup) {
@@ -180,6 +199,7 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
 
     this.addFormEnabled = false;
     this.editFormEnabled = true;
+    this.detailsViewEnabled = false;
   }
 
   editMovement(form: FormGroup) {
@@ -244,10 +264,11 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
   onCancelForm() {
     this.editFormEnabled = false;
     this.addFormEnabled = false;
+    this.detailsViewEnabled = false;
   }
 
   showTable() {
-    return !this.editFormEnabled && !this.addFormEnabled;
+    return !this.editFormEnabled && !this.addFormEnabled && !this.detailsViewEnabled;
   }
 
   private loadCashMovements(): Observable<CashMovementView[]> {

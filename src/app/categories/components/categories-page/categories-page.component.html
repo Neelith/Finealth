@@ -9,6 +9,7 @@
       [headerVisible]="false"
       [entities$]="this.categories$"
       [columns]="this.displayedColumns"
+      [detailsButtonVisible]="false"
       (onEditEntityEvent)="this.showEditCategoryForm($event)"
       (onDeleteEntityEvent)="this.deleteCategory($event)"
     ></app-r-table>

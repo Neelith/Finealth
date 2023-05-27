@@ -15,9 +15,11 @@ export class RTableComponent {
   @Input() entities$!: Observable<any>;
   @Input() columns!: TableColumnDescriptor[];
   @Input() headerVisible : boolean = true;
+  @Input() detailsButtonVisible : boolean = true;
 
   @Output() onDeleteEntityEvent = new EventEmitter<any>();
   @Output() onEditEntityEvent = new EventEmitter<any>();
+  @Output() onOpenDetailsEvent = new EventEmitter<any>();
 
   onDeleteEntity(entity: any) {
     this.onDeleteEntityEvent.emit(entity);
@@ -25,6 +27,10 @@ export class RTableComponent {
 
   onEditEntity(entity: any) {
     this.onEditEntityEvent.emit(entity);
+  }
+
+  onOpenDetails(entity: any) {
+    this.onOpenDetailsEvent.emit(entity);
   }
 
   getColumnNames(columns: TableColumnDescriptor[]) : string[]{

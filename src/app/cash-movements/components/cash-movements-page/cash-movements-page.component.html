@@ -11,6 +11,7 @@
       [columns]="this.displayedColumns"
       (onEditEntityEvent)="this.showEditMovementForm($event)"
       (onDeleteEntityEvent)="this.deleteMovement($event)"
+      (onOpenDetailsEvent)="this.showMovementDetails($event)"
     ></app-r-table>
   </ng-container>
 
@@ -31,4 +32,12 @@
       (cancelFormEvent)="onCancelForm()"
     ></app-cu-form
   ></ng-container>
+
+  <ng-container *ngIf="detailsViewEnabled">
+    <app-generic-view
+      [detailsViewDescriptors]="this.detailsViewDescriptors"
+      [backButtonText]="'INDIETRO'"
+      (OnBackEvent)="onCancelForm()"
+    ></app-generic-view>
+  </ng-container>
 </div>
