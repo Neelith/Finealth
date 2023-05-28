@@ -27,14 +27,13 @@ import { DetailViewDescriptor } from 'src/app/entities/dto/DetailViewDescriptor'
     PageTitleBarComponent,
     CuFormComponent,
     RTableComponent,
-    GenericViewComponent
+    GenericViewComponent,
   ],
   providers: [CashMovementRepositoryService, NotificationService],
   templateUrl: './cash-movements-page.component.html',
   styleUrls: ['./cash-movements-page.component.scss'],
 })
 export class CashMovementsPageComponent implements OnInit, OnDestroy {
-
   pageTitle: string = 'Movimenti';
   movements$!: Observable<CashMovementView[]>;
   addFormControlDescriptors: FormControlDescriptor[] = [];
@@ -47,7 +46,7 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
     { field: 'actions', header: 'Azioni', type: 'actions' },
   ];
   detailsViewEnabled: boolean = false;
-  detailsViewDescriptors : DetailViewDescriptor[] = [];
+  detailsViewDescriptors: DetailViewDescriptor[] = [];
 
   private categories: Category[] = [];
   private subscription: Subscription = new Subscription();
@@ -68,12 +67,27 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  showMovementDetails(movement : CashMovementView){
+  showMovementDetails(movement: CashMovementView) {
     this.detailsViewDescriptors = [
-      { hidden: false, label: 'Ammontare', value: movement.amount, type: 'Currency'},
-      { hidden: false, label: 'Categoria', value: movement.categoryName, type: 'Text'},
-      { hidden: false, label: 'Data', value: movement.date, type: 'Date'},
-      { hidden: false, label: 'Descrizione', value: movement.description, type: 'Text'},
+      {
+        hidden: false,
+        label: 'Ammontare',
+        value: movement.amount,
+        type: 'Currency',
+      },
+      {
+        hidden: false,
+        label: 'Categoria',
+        value: movement.categoryName,
+        type: 'Text',
+      },
+      { hidden: false, label: 'Data', value: movement.date, type: 'Date' },
+      {
+        hidden: false,
+        label: 'Descrizione',
+        value: movement.description,
+        type: 'Text',
+      },
     ];
 
     this.addFormEnabled = false;
@@ -268,7 +282,9 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
   }
 
   showTable() {
-    return !this.editFormEnabled && !this.addFormEnabled && !this.detailsViewEnabled;
+    return (
+      !this.editFormEnabled && !this.addFormEnabled && !this.detailsViewEnabled
+    );
   }
 
   private loadCashMovements(): Observable<CashMovementView[]> {
@@ -290,7 +306,9 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
           });
         }
 
-        return views;
+        return views.sort((a, b) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
       })
     );
   }
