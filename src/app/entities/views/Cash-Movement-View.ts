@@ -6,4 +6,5 @@ export interface CashMovementView{
   categoryId: number;
   iconUrl: string;
   categoryName: string;
+  cashMovementTypeName: string;
 }

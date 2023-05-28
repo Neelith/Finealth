@@ -18,6 +18,7 @@ import { Category } from 'src/app/entities/model/Category';
 import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
 import { GenericViewComponent } from 'src/app/generic/generic-view/generic-view.component';
 import { DetailViewDescriptor } from 'src/app/entities/dto/DetailViewDescriptor';
+import { CashMovementType } from 'src/app/entities/enums/CashMovementType';
 
 @Component({
   selector: 'app-cash-movements-page',
@@ -81,6 +82,12 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
         value: movement.categoryName,
         type: 'Text',
       },
+      {
+        hidden: false,
+        label: 'Tipologia',
+        value: movement.cashMovementTypeName,
+        type: 'Text',
+      },
       { hidden: false, label: 'Data', value: movement.date, type: 'Date' },
       {
         hidden: false,
@@ -128,6 +135,18 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
           this.categories
         ),
       },
+      {
+        formControlName: 'cashMovementTypeName',
+        formControl: new FormControl(CashMovementType[CashMovementType.COMFORT], [
+          Validators.required,
+        ]),
+        hidden: false,
+        label: 'Tipologia',
+        type: 'Select',
+        selectOptions: Object.values(CashMovementType).filter(
+          (value) => typeof value === 'string'
+        ) as string[],
+      },
     ];
 
     this.addFormEnabled = true;
@@ -144,6 +163,10 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
       movement.categoryId = form.value.categoryId;
       movement.date = form.value.date;
       movement.description = form.value.description;
+      movement.cashMovementTypeId =
+        CashMovementType[
+          form.value.cashMovementTypeName as keyof typeof CashMovementType
+        ];
 
       this.subscription.add(
         this.movementsRepository.add(movement).subscribe({
@@ -162,7 +185,7 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  showEditMovementForm(movement: CashMovement) {
+  showEditMovementForm(movement: CashMovementView) {
     this.editFormControlDescriptors = [
       {
         formControlName: 'cashMovementId',
@@ -209,6 +232,19 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
           this.categories
         ),
       },
+      {
+        formControlName: 'cashMovementTypeName',
+        formControl: new FormControl(
+          movement.cashMovementTypeName,
+          [Validators.required]
+        ),
+        hidden: false,
+        label: 'Tipologia',
+        type: 'Select',
+        selectOptions: Object.values(CashMovementType).filter(
+          (value) => typeof value === 'string'
+        ) as string[],
+      },
     ];
 
     this.addFormEnabled = false;
@@ -226,6 +262,10 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
         amount: form.value.amount,
         description: form.value.description,
         date: form.value.date,
+        cashMovementTypeId:
+          CashMovementType[
+            form.value.cashMovementTypeName as keyof typeof CashMovementType
+          ],
       };
 
       this.subscription.add(
@@ -303,6 +343,7 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
             categoryId: movement.categoryId,
             categoryName: category ? category.name : '',
             iconUrl: category ? category.iconUrl : '',
+            cashMovementTypeName: CashMovementType[movement.cashMovementTypeId],
           });
         }
 

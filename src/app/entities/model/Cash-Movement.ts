@@ -4,6 +4,7 @@ export class CashMovement{
   public date!: string;
   public amount: number = 0;
   public categoryId: number = 0;
+  public cashMovementTypeId: number = 0;
 
   public constructor() {
   }

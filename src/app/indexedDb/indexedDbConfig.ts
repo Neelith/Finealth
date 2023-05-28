@@ -24,6 +24,11 @@ export const indexedDbConfig: DBConfig = {
           keypath: 'categoryId',
           options: { unique: false },
         },
+        {
+          name: 'cashMovementTypeId',
+          keypath: 'cashMovementTypeId',
+          options: { unique: false },
+        },
       ],
     },
     {
