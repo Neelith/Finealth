@@ -12,26 +12,26 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$NeroFinealthClient-primary: mat.define-palette(mat.$teal-palette, 700, 500, 800);
-$NeroFinealthClient-accent: mat.define-palette(mat.$teal-palette, A400, A200, A700);
+$Finealth-primary: mat.define-palette(mat.$teal-palette, 700, 500, 800);
+$Finealth-accent: mat.define-palette(mat.$teal-palette, A400, A200, A700);
 
 // The warn palette is optional (defaults to red).
-$NeroFinealthClient-warn: mat.define-palette(mat.$red-palette);
+$Finealth-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$NeroFinealthClient-theme: mat.define-light-theme((
+$Finealth-theme: mat.define-light-theme((
   color: (
-    primary: $NeroFinealthClient-primary,
-    accent: $NeroFinealthClient-accent,
-    warn: $NeroFinealthClient-warn,
+    primary: $Finealth-primary,
+    accent: $Finealth-accent,
+    warn: $Finealth-warn,
   )
 ));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-component-themes($NeroFinealthClient-theme);
+@include mat.all-component-themes($Finealth-theme);
 
 /* You can add global styles to this file, and also import other style files */
 
