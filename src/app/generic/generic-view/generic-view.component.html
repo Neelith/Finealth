@@ -1,4 +1,4 @@
-<div class="form">
+<div class="form" [ngClass]="{'larger-screen': this.isScreenMoreThanSmall}">
   <ng-container *ngFor="let detailsViewDescriptor of detailsViewDescriptors">
     <ng-container
       *ngIf="

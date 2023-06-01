@@ -3,33 +3,33 @@
   (onAddEvent)="this.showAddCategoryForm()"
 ></app-page-title-bar>
 
-<div class="main-content">
-  <ng-container *ngIf="showTable()">
-    <app-r-table
-      [headerVisible]="false"
-      [entities$]="this.categories$"
-      [columns]="this.displayedColumns"
-      [detailsButtonVisible]="false"
-      (onEditEntityEvent)="this.showEditCategoryForm($event)"
-      (onDeleteEntityEvent)="this.deleteCategory($event)"
-    ></app-r-table>
-  </ng-container>
+<ng-container *ngIf="showTable()">
+  <app-r-table
+    [headerVisible]="false"
+    [entities$]="this.categories$"
+    [columns]="this.displayedColumns"
+    [detailsButtonVisible]="false"
+    (onEditEntityEvent)="this.showEditCategoryForm($event)"
+    (onDeleteEntityEvent)="this.deleteCategory($event)"
+  ></app-r-table>
+</ng-container>
 
-  <ng-container *ngIf="addFormEnabled"
-    ><app-cu-form
+<ng-container *ngIf="addFormEnabled"
+  ><div class="content">
+    <app-cu-form
       [formControlDescriptors]="addFormControlDescriptors"
       [submitButtonText]="'Inserisci'"
       (submitFormEvent)="addCategory($event)"
       (cancelFormEvent)="onCancelForm()"
-    ></app-cu-form
-  ></ng-container>
+    ></app-cu-form></div
+></ng-container>
 
-  <ng-container *ngIf="editFormEnabled"
-    ><app-cu-form
+<ng-container *ngIf="editFormEnabled"
+  ><div class="content">
+    <app-cu-form
       [formControlDescriptors]="editFormControlDescriptors"
       [submitButtonText]="'Modifica'"
       (submitFormEvent)="editCategory($event)"
       (cancelFormEvent)="onCancelForm()"
-    ></app-cu-form
-  ></ng-container>
-</div>
+    ></app-cu-form></div
+></ng-container>
