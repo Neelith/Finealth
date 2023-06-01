@@ -19,6 +19,11 @@ import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
 import { GenericViewComponent } from 'src/app/generic/generic-view/generic-view.component';
 import { DetailViewDescriptor } from 'src/app/entities/dto/DetailViewDescriptor';
 import { CashMovementType } from 'src/app/entities/enums/CashMovementType';
+import {
+  BreakpointObserver,
+  BreakpointState,
+  Breakpoints,
+} from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-cash-movements-page',
@@ -56,8 +61,72 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
     private movementsRepository: CashMovementRepositoryService,
     private dialog: MatDialog,
     private notificationService: NotificationService,
-    private categoryRepository: CategoryRepositoryService
-  ) {}
+    private categoryRepository: CategoryRepositoryService,
+    private breakpointObserver: BreakpointObserver
+  ) {
+    this.subscription.add(
+      this.breakpointObserver
+        .observe([
+          Breakpoints.XSmall,
+          Breakpoints.Small,
+          Breakpoints.Medium,
+          Breakpoints.Large,
+          Breakpoints.XLarge,
+        ])
+        .subscribe((result: BreakpointState) => {
+          if (result.breakpoints[Breakpoints.Small]) {
+            const dateField: TableColumnDescriptor = {
+              field: 'date',
+              header: 'Data',
+              type: 'date',
+            };
+            this.displayedColumns.splice(1, 0, dateField);
+          }
+
+          if (result.breakpoints[Breakpoints.Medium]) {
+            const dateField: TableColumnDescriptor = {
+              field: 'date',
+              header: 'Data',
+              type: 'date',
+            };
+            this.displayedColumns.splice(1, 0, dateField);
+
+            const categoryNameField: TableColumnDescriptor = {
+              field: 'categoryName',
+              header: 'Categoria',
+              type: 'text',
+            };
+            this.displayedColumns.splice(1, 0, categoryNameField);
+          }
+
+          if (
+            result.breakpoints[Breakpoints.Large] ||
+            result.breakpoints[Breakpoints.XLarge]
+          ) {
+            const descriptionField: TableColumnDescriptor = {
+              field: 'description',
+              header: 'Descrizione',
+              type: 'text',
+            };
+            this.displayedColumns.splice(1, 0, descriptionField);
+
+            const dateField: TableColumnDescriptor = {
+              field: 'date',
+              header: 'Data',
+              type: 'date',
+            };
+            this.displayedColumns.splice(1, 0, dateField);
+
+            const categoryNameField: TableColumnDescriptor = {
+              field: 'categoryName',
+              header: 'Categoria',
+              type: 'text',
+            };
+            this.displayedColumns.splice(1, 0, categoryNameField);
+          }
+        })
+    );
+  }
 
   async ngOnInit() {
     this.categories = await firstValueFrom(this.categoryRepository.getAll());
@@ -137,9 +206,10 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
       },
       {
         formControlName: 'cashMovementTypeName',
-        formControl: new FormControl(CashMovementType[CashMovementType.COMFORT], [
-          Validators.required,
-        ]),
+        formControl: new FormControl(
+          CashMovementType[CashMovementType.COMFORT],
+          [Validators.required]
+        ),
         hidden: false,
         label: 'Tipologia',
         type: 'Select',
@@ -234,10 +304,9 @@ export class CashMovementsPageComponent implements OnInit, OnDestroy {
       },
       {
         formControlName: 'cashMovementTypeName',
-        formControl: new FormControl(
-          movement.cashMovementTypeName,
-          [Validators.required]
-        ),
+        formControl: new FormControl(movement.cashMovementTypeName, [
+          Validators.required,
+        ]),
         hidden: false,
         label: 'Tipologia',
         type: 'Select',

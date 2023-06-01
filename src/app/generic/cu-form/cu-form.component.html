@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+<form [formGroup]="form" [ngClass]="{'larger-screen': this.isScreenMoreThanSmall}">
   <ng-container *ngFor="let formControlDescriptor of formControlDescriptors">
     <ng-container
       *ngIf="

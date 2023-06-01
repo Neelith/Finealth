@@ -3,41 +3,43 @@
   (onAddEvent)="this.showAddMovementForm()"
 ></app-page-title-bar>
 
-<div class="main-content">
-  <ng-container *ngIf="showTable()">
-    <app-r-table
-      [headerVisible]="false"
-      [entities$]="this.movements$"
-      [columns]="this.displayedColumns"
-      (onEditEntityEvent)="this.showEditMovementForm($event)"
-      (onDeleteEntityEvent)="this.deleteMovement($event)"
-      (onOpenDetailsEvent)="this.showMovementDetails($event)"
-    ></app-r-table>
-  </ng-container>
+<ng-container *ngIf="showTable()">
+  <app-r-table
+    [headerVisible]="false"
+    [entities$]="this.movements$"
+    [columns]="this.displayedColumns"
+    (onEditEntityEvent)="this.showEditMovementForm($event)"
+    (onDeleteEntityEvent)="this.deleteMovement($event)"
+    (onOpenDetailsEvent)="this.showMovementDetails($event)"
+  ></app-r-table>
+</ng-container>
 
-  <ng-container *ngIf="addFormEnabled"
-    ><app-cu-form
+<ng-container *ngIf="addFormEnabled"
+  ><div class="content">
+    <app-cu-form
       [formControlDescriptors]="addFormControlDescriptors"
       [submitButtonText]="'INSERISCI'"
       (submitFormEvent)="addMovement($event)"
       (cancelFormEvent)="onCancelForm()"
-    ></app-cu-form
-  ></ng-container>
+    ></app-cu-form></div
+></ng-container>
 
-  <ng-container *ngIf="editFormEnabled"
-    ><app-cu-form
+<ng-container *ngIf="editFormEnabled"
+  ><div class="content">
+    <app-cu-form
       [formControlDescriptors]="editFormControlDescriptors"
       [submitButtonText]="'MODIFICA'"
       (submitFormEvent)="editMovement($event)"
       (cancelFormEvent)="onCancelForm()"
-    ></app-cu-form
-  ></ng-container>
+    ></app-cu-form></div
+></ng-container>
 
-  <ng-container *ngIf="detailsViewEnabled">
+<ng-container *ngIf="detailsViewEnabled">
+  <div class="content">
     <app-generic-view
       [detailsViewDescriptors]="this.detailsViewDescriptors"
       [backButtonText]="'INDIETRO'"
       (OnBackEvent)="onCancelForm()"
     ></app-generic-view>
-  </ng-container>
-</div>
+  </div>
+</ng-container>

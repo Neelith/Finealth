@@ -9,6 +9,7 @@ import { MaterialModule } from './material/material.module';
 import { NgxIndexedDBModule } from 'ngx-indexed-db';
 import { indexedDbConfig } from './indexedDb/indexedDbConfig';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 @NgModule({
     declarations: [
@@ -28,7 +29,10 @@ import { ServiceWorkerModule } from '@angular/service-worker';
           // Register the ServiceWorker as soon as the application is stable
           // or after 30 seconds (whichever comes first).
           registrationStrategy: 'registerWhenStable:30000'
-        })
+        }),
+        NgxEchartsModule.forRoot({
+          echarts: () => import('echarts'),
+        }),
     ]
 })
 export class AppModule { }
