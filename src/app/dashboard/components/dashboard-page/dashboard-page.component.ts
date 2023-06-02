@@ -56,7 +56,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.categoryChartOptions =
       this.echartOptionsService.getCategoryChartInitOptions(
         this.enableCategoryGraphLabels,
-        'Dove sono finiti i miei soldi?'
+        'Dove sono finiti i miei soldi?!'
       );
 
     this.cashMovementTypeChartOptions =
