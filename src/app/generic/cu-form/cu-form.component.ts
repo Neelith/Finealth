@@ -36,11 +36,7 @@ export class CuFormComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.breakpointObserver
         .observe([
-          Breakpoints.XSmall,
-          Breakpoints.Small,
-          Breakpoints.Medium,
-          Breakpoints.Large,
-          Breakpoints.XLarge,
+          Breakpoints.XSmall
         ])
         .subscribe((result: BreakpointState) => {
           if (!result.breakpoints[Breakpoints.XSmall]) {

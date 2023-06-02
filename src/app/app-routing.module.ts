@@ -8,7 +8,7 @@ const routes: Routes = [
   { path: 'movements', component: CashMovementsPageComponent },
   { path: 'categories', component: CategoriesPageComponent },
   { path: 'dashboard', component: DashboardPageComponent },
-  { path: '', component: CashMovementsPageComponent },
+  { path: '',   redirectTo: '/movements', pathMatch: 'full' }
 ];
 
 @NgModule({
