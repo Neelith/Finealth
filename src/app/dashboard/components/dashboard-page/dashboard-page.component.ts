@@ -12,6 +12,7 @@ import {
   BreakpointState,
   Breakpoints,
 } from '@angular/cdk/layout';
+import { CashMovementType } from 'src/app/entities/enums/CashMovementType';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -98,13 +99,13 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   ): KeyValue<string, number>[] {
     return categories
       .map((category) => {
-        let categoryCashMovements = cashMovements.filter(
+        let cashMovementsGroupedByCategory = cashMovements.filter(
           (cashMovement) =>
             cashMovement.categoryId === category.categoryId &&
-            cashMovement.amount < 0
+            cashMovement.cashMovementTypeId != CashMovementType.ENTRATA
         );
 
-        let totalAmount = categoryCashMovements.reduce(
+        let totalAmount = cashMovementsGroupedByCategory.reduce(
           (sum, cashMovement) => sum + Math.abs(cashMovement.amount),
           0
         );
