@@ -22,6 +22,10 @@ export class NavbarComponent {
     this.router.navigateByUrl("/");
   }
 
+  onDashboardIconClick(){
+    this.router.navigateByUrl("/dashboard");
+  }
+
   onMovementsIconClick(){
     this.router.navigateByUrl("/movements");
   }

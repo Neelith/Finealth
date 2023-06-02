@@ -19,6 +19,15 @@
   <mat-menu #menu="matMenu">
     <button
       mat-menu-item
+      aria-label="dashboard button"
+      (click)="onDashboardIconClick()"
+    >
+      <mat-icon class="theme-color">bar_chart</mat-icon>
+      <span>DASHBOARD</span>
+    </button>
+
+    <button
+      mat-menu-item
       aria-label="movements button"
       (click)="onMovementsIconClick()"
     >

@@ -1,1 +1,8 @@
-<p>dashboard-page works!</p>
+<ng-container>
+  <div
+    echarts
+    [autoResize]="true"
+    [options]="categoryChartOptions"
+    [merge]="categoryChartUpdateOptions"
+  ></div>
+</ng-container>
