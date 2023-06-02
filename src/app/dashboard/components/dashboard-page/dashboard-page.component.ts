@@ -31,6 +31,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   inputDataValid: boolean = false;
   categoryChartOptions: any;
   categoryChartUpdateOptions: any;
+  cashMovementTypeChartOptions: any;
+  cashMovementTypeChartUpdateOptions: any;
   enableCategoryGraphLabels: boolean = false;
 
   constructor(
@@ -53,8 +55,16 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.categoryChartOptions =
       this.echartOptionsService.getCategoryChartInitOptions(
-        this.enableCategoryGraphLabels
+        this.enableCategoryGraphLabels,
+        'Dove sono finiti i miei soldi?'
       );
+
+    this.cashMovementTypeChartOptions =
+      this.echartOptionsService.getCategoryChartInitOptions(
+        this.enableCategoryGraphLabels,
+        'Spese divise per priorità'
+      );
+
     this.cashMovements = await this.getCashMovementsAsync();
     this.categories = await this.getCategoriesAsync();
 
@@ -65,6 +75,15 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     this.categoryChartUpdateOptions =
       this.echartOptionsService.getCategoryChartOptions(categoryGraphData);
+
+    const cashMovementTypeGraphData = this.getCashMovementTypeGraphData(
+      this.cashMovements
+    );
+
+    this.cashMovementTypeChartUpdateOptions =
+      this.echartOptionsService.getCategoryChartOptions(
+        cashMovementTypeGraphData
+      );
   }
 
   async reloadCategoryChartData() {
@@ -117,6 +136,44 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       })
       .filter((data) => data.value !== 0)
       .sort((a, b) => a.value - b.value);
+  }
+
+  private getCashMovementTypeGraphData(
+    cashMovements: CashMovement[]
+  ): KeyValue<string, number>[] {
+    const groupedCashMovements = cashMovements.reduce((acc, cashMovement) => {
+      const key = cashMovement.cashMovementTypeId;
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(cashMovement);
+      return acc;
+    }, {} as Record<CashMovementType, CashMovement[]>);
+
+    if (!groupedCashMovements) return [];
+
+    const enumKeys = Object.keys(CashMovementType).filter((key) =>
+      isNaN(Number(key)) && key !== CashMovementType[CashMovementType.ENTRATA]
+    );
+
+    let keyValues: KeyValue<string, number>[] = [];
+    for (const enumKey of enumKeys) {
+      const cashMovementsInGroup =
+        groupedCashMovements[
+          CashMovementType[enumKey as keyof typeof CashMovementType]
+        ];
+
+      if (!cashMovementsInGroup) continue;
+
+      const sumOfAmounts = cashMovementsInGroup.reduce(
+        (acc, cashMovement) => acc + Math.abs(cashMovement.amount),
+        0
+      );
+
+      keyValues.push({ key: enumKey, value: sumOfAmounts });
+    }
+
+    return keyValues.sort((a,b) => a.value - b.value);
   }
 
   ngOnDestroy(): void {

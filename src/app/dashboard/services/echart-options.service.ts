@@ -5,19 +5,19 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class EchartOptionsService {
-  getCategoryChartInitOptions(enableCategoryGraphLabels: boolean) {
+  getCategoryChartInitOptions(enableCategoryGraphLabels: boolean, title : string) {
     return {
       color: ['#00A393', '#008F81', '#007A6E', '#00665C'],
       title: {
         left: '50%',
         top: '5%',
-        text: 'Dove sono finiti i miei soldi?',
+        text: title,
         textAlign: 'center',
         textStyle: { color: '#00A393' },
       },
       tooltip: {
         trigger: 'item',
-        formatter: '{a} <br/>{b} : -{c} ({d}%)',
+        formatter: '{a} <br/>{b} : {c} ({d}%)',
         align: 'center',
       },
       series: [
