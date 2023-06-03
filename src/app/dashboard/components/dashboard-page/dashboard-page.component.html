@@ -1,4 +1,9 @@
 <ng-container>
+  <app-date-range-picker class="center"
+    (OnDateRangeSelection)="this.filterChartData($event)"
+  ></app-date-range-picker>
+</ng-container>
+<ng-container>
   <div
     echarts
     [autoResize]="true"

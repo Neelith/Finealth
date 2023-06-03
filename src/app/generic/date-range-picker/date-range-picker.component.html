@@ -1,0 +1,18 @@
+<mat-form-field appearance="outline">
+  <mat-label>Filtra per periodo</mat-label>
+  <mat-date-range-input [rangePicker]="picker">
+    <input
+      matStartDate
+      placeholder="Data di inizio"
+      #dateRangeStart
+    />
+    <input
+      matEndDate
+      placeholder="Data di fine"
+      #dateRangeEnd
+      (dateChange)="onDateRangeChange(dateRangeStart, dateRangeEnd)"
+    />
+  </mat-date-range-input>
+  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-date-range-picker #picker></mat-date-range-picker>
+</mat-form-field>

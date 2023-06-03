@@ -13,11 +13,12 @@ import {
   Breakpoints,
 } from '@angular/cdk/layout';
 import { CashMovementType } from 'src/app/entities/enums/CashMovementType';
+import { DateRangePickerComponent } from 'src/app/generic/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
-  imports: [CommonModule, NgxEchartsModule],
+  imports: [CommonModule, NgxEchartsModule, DateRangePickerComponent],
   providers: [EchartOptionsService],
   templateUrl: './dashboard-page.component.html',
   styleUrls: ['./dashboard-page.component.scss'],
@@ -68,22 +69,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.cashMovements = await this.getCashMovementsAsync();
     this.categories = await this.getCategoriesAsync();
 
-    const categoryGraphData = this.getCategoryGraphData(
-      this.categories,
-      this.cashMovements
-    );
-
-    this.categoryChartUpdateOptions =
-      this.echartOptionsService.getCategoryChartOptions(categoryGraphData);
-
-    const cashMovementTypeGraphData = this.getCashMovementTypeGraphData(
-      this.cashMovements
-    );
-
-    this.cashMovementTypeChartUpdateOptions =
-      this.echartOptionsService.getCategoryChartOptions(
-        cashMovementTypeGraphData
-      );
+    this.loadGraphData(this.categories, this.cashMovements);
   }
 
   async reloadCategoryChartData() {
@@ -92,16 +78,16 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.categories = await this.getCategoriesAsync();
   }
 
-  async filterCategoryChartData(data: any) {
-    // this.isSearchFiltered = true;
-    // let startDateValue = moment(data.startDate.value);
-    // let endDateValue = moment(data.endDate.value);
-    // endDateValue.hours(23).minutes(59).seconds(59);
-    // this.cashMovements = (await this.getCashMovementsAsync()).filter((cm) => {
-    //   const cashMovementDate = moment(cm.date);
-    //   return cashMovementDate.isBetween(startDateValue, endDateValue);
-    // });
-    // this.categories = await this.getCategoriesAsync();
+  async filterChartData(dates: Date[]) {
+    const startDate = dates[0];
+    const endDate = dates[1];
+
+    const filteredMovements = this.cashMovements.filter((movement) => {
+      const movementDate = new Date(movement.date);
+      return movementDate >= startDate && movementDate <= endDate;
+    });
+
+    this.loadGraphData(this.categories, filteredMovements);
   }
 
   private async getCashMovementsAsync() {
@@ -152,8 +138,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     if (!groupedCashMovements) return [];
 
-    const enumKeys = Object.keys(CashMovementType).filter((key) =>
-      isNaN(Number(key)) && key !== CashMovementType[CashMovementType.ENTRATA]
+    const enumKeys = Object.keys(CashMovementType).filter(
+      (key) =>
+        isNaN(Number(key)) && key !== CashMovementType[CashMovementType.ENTRATA]
     );
 
     let keyValues: KeyValue<string, number>[] = [];
@@ -173,7 +160,25 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       keyValues.push({ key: enumKey, value: sumOfAmounts });
     }
 
-    return keyValues.sort((a,b) => a.value - b.value);
+    return keyValues.sort((a, b) => a.value - b.value);
+  }
+
+  private loadGraphData(categories: Category[], cashMovements: CashMovement[]) {
+    const categoryGraphData = this.getCategoryGraphData(
+      categories,
+      cashMovements
+    );
+
+    this.categoryChartUpdateOptions =
+      this.echartOptionsService.getCategoryChartOptions(categoryGraphData);
+
+    const cashMovementTypeGraphData =
+      this.getCashMovementTypeGraphData(cashMovements);
+
+    this.cashMovementTypeChartUpdateOptions =
+      this.echartOptionsService.getCategoryChartOptions(
+        cashMovementTypeGraphData
+      );
   }
 
   ngOnDestroy(): void {
