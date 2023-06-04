@@ -15,11 +15,12 @@ import {
 import { CashMovementType } from 'src/app/entities/enums/CashMovementType';
 import { DateRangePickerComponent } from 'src/app/generic/date-range-picker/date-range-picker.component';
 import { PageTitleBarComponent } from 'src/app/page-title-bar/page-title-bar.component';
+import { MaterialModule } from 'src/app/material/material.module';
 
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
-  imports: [CommonModule, NgxEchartsModule, DateRangePickerComponent, PageTitleBarComponent],
+  imports: [CommonModule, NgxEchartsModule, DateRangePickerComponent, PageTitleBarComponent, MaterialModule],
   providers: [EchartOptionsService],
   templateUrl: './dashboard-page.component.html',
   styleUrls: ['./dashboard-page.component.scss'],
