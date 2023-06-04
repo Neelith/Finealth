@@ -10,6 +10,10 @@
     </ng-template>
     Content 1</mat-tab
   >
-  <mat-tab label="Second">Content 2</mat-tab><!-- account_balance -->
-  <mat-tab label="Third">Content 3</mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">account_balance</mat-icon>
+    </ng-template>
+    Content 2</mat-tab
+  >
 </mat-tab-group>
