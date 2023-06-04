@@ -14,16 +14,18 @@ import {
 } from '@angular/cdk/layout';
 import { CashMovementType } from 'src/app/entities/enums/CashMovementType';
 import { DateRangePickerComponent } from 'src/app/generic/date-range-picker/date-range-picker.component';
+import { PageTitleBarComponent } from 'src/app/page-title-bar/page-title-bar.component';
 
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
-  imports: [CommonModule, NgxEchartsModule, DateRangePickerComponent],
+  imports: [CommonModule, NgxEchartsModule, DateRangePickerComponent, PageTitleBarComponent],
   providers: [EchartOptionsService],
   templateUrl: './dashboard-page.component.html',
   styleUrls: ['./dashboard-page.component.scss'],
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
+  pageTitle: string = 'Dashboard';
   subscription: Subscription = new Subscription();
   cashMovements: CashMovement[] = [];
   categories: Category[] = [];
@@ -72,13 +74,15 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.loadGraphData(this.categories, this.cashMovements);
   }
 
-  async reloadCategoryChartData() {
+  async resetChartData() {
     this.isSearchFiltered = false;
     this.cashMovements = await this.getCashMovementsAsync();
     this.categories = await this.getCategoriesAsync();
+    this.loadGraphData(this.categories, this.cashMovements);
   }
 
   async filterChartData(dates: Date[]) {
+    this.isSearchFiltered = true;
     const startDate = dates[0];
     const endDate = dates[1];
 

@@ -1,7 +1,15 @@
+<app-page-title-bar
+  [title]="this.pageTitle"
+  [addButtonVisible]="false"
+  [cancelButtonVisible]="isSearchFiltered"
+  (onCancelEvent)="this.resetChartData()"
+></app-page-title-bar>
 <ng-container>
-  <app-date-range-picker class="center"
-    (OnDateRangeSelection)="this.filterChartData($event)"
-  ></app-date-range-picker>
+  <div class="center">
+    <app-date-range-picker
+      (OnDateRangeSelection)="this.filterChartData($event)"
+    ></app-date-range-picker>
+  </div>
 </ng-container>
 <ng-container>
   <div

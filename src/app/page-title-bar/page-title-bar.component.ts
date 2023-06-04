@@ -12,9 +12,15 @@ import { MaterialModule } from '../material/material.module';
 export class PageTitleBarComponent {
   @Input() title: string = '';
   @Input() addButtonVisible : boolean = true;
+  @Input() cancelButtonVisible : boolean = true;
   @Output() onAddEvent: EventEmitter<void> = new EventEmitter();
+  @Output() onCancelEvent: EventEmitter<void> = new EventEmitter();
 
   onAdd() {
     this.onAddEvent.emit();
+  }
+
+  onCancel() {
+    this.onCancelEvent.emit();
   }
 }

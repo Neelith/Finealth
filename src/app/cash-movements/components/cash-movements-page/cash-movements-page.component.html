@@ -1,6 +1,7 @@
 <app-page-title-bar
   [title]="this.pageTitle"
   (onAddEvent)="this.showAddMovementForm()"
+  [cancelButtonVisible]="false"
 ></app-page-title-bar>
 
 <ng-container *ngIf="showTable()">
