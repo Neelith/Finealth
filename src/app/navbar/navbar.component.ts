@@ -8,30 +8,12 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, MaterialModule],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
+  constructor(private router: Router) {}
 
-  constructor(private router : Router) { }
-
-  onAccountIconClick(){
-    this.router.navigateByUrl("/login");
+  navigateTo(route: string) {
+    this.router.navigateByUrl(route);
   }
-
-  onHomeIconClick(){
-    this.router.navigateByUrl("/");
-  }
-
-  onDashboardIconClick(){
-    this.router.navigateByUrl("/dashboard");
-  }
-
-  onMovementsIconClick(){
-    this.router.navigateByUrl("/movements");
-  }
-
-  onCategoriesIconClick(){
-    this.router.navigateByUrl("/categories");
-  }
-
 }
