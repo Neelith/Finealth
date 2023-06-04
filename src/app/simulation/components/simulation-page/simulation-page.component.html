@@ -1,1 +1,15 @@
-<p>simulation-page works!</p>
+<app-page-title-bar
+  [title]="this.pageTitle"
+  [addButtonVisible]="false"
+  [cancelButtonVisible]="false"
+></app-page-title-bar>
+<mat-tab-group animationDuration="0ms">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">account_balance_wallet</mat-icon>
+    </ng-template>
+    Content 1</mat-tab
+  >
+  <mat-tab label="Second">Content 2</mat-tab><!-- account_balance -->
+  <mat-tab label="Third">Content 3</mat-tab>
+</mat-tab-group>
