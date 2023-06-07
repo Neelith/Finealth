@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 export class GenericViewComponent{
   @Input() detailsViewDescriptors! : DetailViewDescriptor[];
   @Input() backButtonText: string = 'Back';
+  @Input() backButtonEnabled : boolean = true;
   @Output() OnBackEvent = new EventEmitter<void>();
 
   subscription : Subscription = new Subscription();

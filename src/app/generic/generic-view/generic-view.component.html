@@ -29,6 +29,7 @@
   </ng-container>
 
   <button
+  *ngIf="backButtonEnabled"
     mat-raised-button
     color="primary"
     (click)="onBackEvent()"

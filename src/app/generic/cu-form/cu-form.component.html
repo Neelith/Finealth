@@ -78,7 +78,7 @@
   >
     {{ submitButtonText }}
   </button>
-  <button mat-raised-button (click)="onCancelFormEvent()">
+  <button *ngIf="cancelButtonVisible" mat-raised-button (click)="onCancelFormEvent()">
     {{ cancelButtonText }}
   </button>
 </form>

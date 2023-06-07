@@ -22,6 +22,7 @@ export class CuFormComponent implements OnInit, OnDestroy {
   @Input() formControlDescriptors: FormControlDescriptor[] = [];
   @Input() submitButtonText: string = 'CONFERMA';
   @Input() cancelButtonText: string = 'CANCELLA';
+  @Input() cancelButtonVisible: boolean = true;
   @Output() submitFormEvent = new EventEmitter<FormGroup>();
   @Output() cancelFormEvent = new EventEmitter<void>();
 
