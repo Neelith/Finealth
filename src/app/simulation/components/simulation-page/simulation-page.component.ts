@@ -11,73 +11,119 @@ import { DetailViewDescriptor } from 'src/app/entities/dto/DetailViewDescriptor'
 @Component({
   selector: 'app-simulation-page',
   standalone: true,
-  imports: [CommonModule, PageTitleBarComponent, MaterialModule, CuFormComponent, GenericViewComponent],
+  imports: [
+    CommonModule,
+    PageTitleBarComponent,
+    MaterialModule,
+    CuFormComponent,
+    GenericViewComponent,
+  ],
   templateUrl: './simulation-page.component.html',
-  styleUrls: ['./simulation-page.component.scss']
+  styleUrls: ['./simulation-page.component.scss'],
 })
 export class SimulationPageComponent {
   pageTitle: string = 'Simulatori';
-  onlyNumbersRegex : string = "^[0-9]+(\.[0-9]+)?$";
+  onlyNumbersRegex: string = '^[0-9]+(.[0-9]+)?$';
   compoundFormControlDescriptors: FormControlDescriptor[] = [];
-  detailsViewDescriptors : DetailViewDescriptor[] = [];
-  showResultView : boolean = false;
+  detailsViewDescriptors: DetailViewDescriptor[] = [];
+  showResultView: boolean = false;
 
-constructor(){
-  this.compoundFormControlDescriptors = [
-    {
-      formControlName: 'principal',
-      formControl: new FormControl(0, [Validators.required, Validators.pattern(this.onlyNumbersRegex)]),
-      hidden: false,
-      label: 'Investimenti attuali',
-      type: 'Text',
-    },
-    {
-      formControlName: 'addition',
-      formControl: new FormControl(0, [Validators.required, Validators.pattern(this.onlyNumbersRegex)]),
-      hidden: false,
-      label: 'Investimento annuale',
-      type: 'Text',
-    },
-    {
-      formControlName: 'yearsToGrow',
-      formControl: new FormControl(25, [Validators.required, Validators.pattern(this.onlyNumbersRegex)]),
-      hidden: false,
-      label: 'Anni',
-      type: 'Text',
-    },
-    {
-      formControlName: 'interest',
-      formControl: new FormControl(8, [Validators.required, Validators.pattern(this.onlyNumbersRegex)]),
-      hidden: false,
-      label: 'Interesse in %',
-      type: 'Text',
-    },
-    {
-      formControlName: 'capitalGainTax',
-      formControl: new FormControl(26, [Validators.required, Validators.pattern(this.onlyNumbersRegex)]),
-      hidden: false,
-      label: 'Tasse sul capital gain in %',
-      type: 'Text',
-    },
-    {
-      formControlName: 'annualTax',
-      formControl: new FormControl(0.2, [Validators.required, Validators.pattern(this.onlyNumbersRegex)]),
-      hidden: false,
-      label: 'Imposta di bollo (o IVAFE) %',
-      type: 'Text',
-    }
-  ]
-}
-  calculate(form: FormGroup){
-    //calc things
-    const principal = form.value.principal;
-    const addition = form.value.addition;
-    const yearsToGrow = form.value.yearsToGrow;
-    const interest = form.value.interest;
-    const capitalGainTax = form.value.capitalGainTax;
-    const annualTax = form.value.annualTax;
+  constructor() {
+    this.compoundFormControlDescriptors = [
+      {
+        formControlName: 'principal',
+        formControl: new FormControl(0, [
+          Validators.required,
+          Validators.pattern(this.onlyNumbersRegex),
+        ]),
+        hidden: false,
+        label: 'Investimenti attuali',
+        type: 'Text',
+      },
+      {
+        formControlName: 'addition',
+        formControl: new FormControl(0, [
+          Validators.required,
+          Validators.pattern(this.onlyNumbersRegex),
+        ]),
+        hidden: false,
+        label: 'Investimento annuale',
+        type: 'Text',
+      },
+      {
+        formControlName: 'yearsToGrow',
+        formControl: new FormControl(25, [
+          Validators.required,
+          Validators.pattern(this.onlyNumbersRegex),
+        ]),
+        hidden: false,
+        label: 'Anni',
+        type: 'Text',
+      },
+      {
+        formControlName: 'interest',
+        formControl: new FormControl(8, [
+          Validators.required,
+          Validators.pattern(this.onlyNumbersRegex),
+        ]),
+        hidden: false,
+        label: 'Interesse in %',
+        type: 'Text',
+      },
+      {
+        formControlName: 'capitalGainTax',
+        formControl: new FormControl(26, [
+          Validators.required,
+          Validators.pattern(this.onlyNumbersRegex),
+        ]),
+        hidden: false,
+        label: 'Tasse sul capital gain in %',
+        type: 'Text',
+      },
+      {
+        formControlName: 'annualTax',
+        formControl: new FormControl(0.2, [
+          Validators.required,
+          Validators.pattern(this.onlyNumbersRegex),
+        ]),
+        hidden: false,
+        label: 'Imposta di bollo (o IVAFE) %',
+        type: 'Text',
+      },
+      {
+        formControlName: 'safeWithdrawRate',
+        formControl: new FormControl(3.5, [
+          Validators.required,
+          Validators.pattern(this.onlyNumbersRegex),
+        ]),
+        hidden: false,
+        label: 'Tasso di prelievo',
+        type: 'Text',
+      }
+    ];
+  }
+  calculate(form: FormGroup) {
+    const principal: number = form.value.principal;
+    const addition: number = form.value.addition;
+    const yearsToGrow: number = form.value.yearsToGrow;
+    const interest: number = form.value.interest;
+    const capitalGainTax: number = form.value.capitalGainTax;
+    const annualTax: number = form.value.annualTax;
+    const safeWithdrawRate : number = form.value.safeWithdrawRate;
 
-    const compoundInterest = this.calculateCompoundInterest(principal, addition, interest, yearsToGrow);
+    const compoundInterest = this.calculateCompoundInterest(
+      principal,
+      addition,
+      interest,
+      yearsToGrow,
+      annualTax
+    );
+    const totalContribution: number = addition * yearsToGrow + +principal;
+    const totalInterest: number = compoundInterest - totalContribution;
+    const netInterest: number =
+      totalInterest - (totalInterest * capitalGainTax) / 100;
+    const totalNet = netInterest + +totalContribution;
+    const annualWithdraw = totalNet * safeWithdrawRate / 100;
 
     this.detailsViewDescriptors = [
       {
@@ -88,20 +134,49 @@ constructor(){
       },
       {
         hidden: false,
-        label: 'Montante netto',
-        value: 666,
+        label: 'Versamenti totali',
+        value: totalContribution,
         type: 'Currency',
       },
+      {
+        hidden: false,
+        label: 'Interessi totali',
+        value: totalInterest,
+        type: 'Currency',
+      },
+      {
+        hidden: false,
+        label: 'Interessi netti',
+        value: netInterest,
+        type: 'Currency',
+      },
+      {
+        hidden: false,
+        label: 'Montante netto',
+        value: totalNet,
+        type: 'Currency',
+      },
+      {
+        hidden: false,
+        label: 'Prelievo netto (annuo)',
+        value: annualWithdraw,
+        type: 'Currency',
+      }
     ];
     this.showResultView = true;
   }
 
-  private calculateCompoundInterest(p: number, a: number, r: number, y: number): number {
-    const n = 1; // Assuming interest is compounded annually
-    const i = r/100;
-    const principalFutureValue = p * (Math.pow((1 + i / n), y * n));
-    const annualAdditionFutureValue = (a/i) * Math.pow((1+i), y) - a/i
+  private calculateCompoundInterest(
+    p: number,
+    a: number,
+    r: number,
+    y: number,
+    annualTax : number
+  ): number {
+    const i = r / 100 - annualTax / 100;
+
+    const principalFutureValue = p * Math.pow(1 + i, y);
+    const annualAdditionFutureValue = (a / i) * Math.pow(1 + i, y) - a / i;
     return annualAdditionFutureValue + principalFutureValue;
   }
-
 }
