@@ -124,9 +124,9 @@ export class SimulationPageComponent {
     );
     const totalContribution: number = addition * yearsToGrow + principal;
     const totalInterest: number = compoundInterest - totalContribution;
-    const netInterest: number =
+    const netInterest: number = totalInterest <= 0? 0 :
       totalInterest - (totalInterest * capitalGainTax) / 100;
-    const totalNet: number = netInterest + totalContribution;
+    const totalNet: number = totalInterest <= 0? compoundInterest : netInterest + totalContribution;
     const annualWithdraw : number = totalNet * safeWithdrawRate / 100;
 debugger
     this.detailsViewDescriptors = [

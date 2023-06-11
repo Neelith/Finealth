@@ -1,11 +1,11 @@
 <div class="form" [ngClass]="{'larger-screen': this.isScreenMoreThanSmall}">
   <ng-container *ngFor="let detailsViewDescriptor of detailsViewDescriptors">
-    <span class="subtitle">{{ detailsViewDescriptor.label | uppercase }}</span>
     <ng-container
       *ngIf="
         !detailsViewDescriptor.hidden && detailsViewDescriptor.type === 'Text' && detailsViewDescriptor.value
       "
     >
+      <span class="subtitle">{{ detailsViewDescriptor.label }}</span>
       <div class="view">{{ detailsViewDescriptor.value | uppercase}}</div>
     </ng-container>
 
@@ -14,6 +14,7 @@
         !detailsViewDescriptor.hidden && detailsViewDescriptor.type === 'Date' && detailsViewDescriptor.value
       "
     >
+      <span class="subtitle">{{ detailsViewDescriptor.label }}</span>
       <div class="view">{{ detailsViewDescriptor.value | date: detailsViewDescriptor.dateFormat? detailsViewDescriptor.dateFormat : "dd/MM/yyyy"}}</div>
     </ng-container>
 
@@ -22,6 +23,7 @@
         !detailsViewDescriptor.hidden && detailsViewDescriptor.type === 'Currency' && detailsViewDescriptor.value
       "
     >
+      <span class="subtitle">{{ detailsViewDescriptor.label }}</span>
       <div class="view">{{ detailsViewDescriptor.value | currency: detailsViewDescriptor.currencySymbol? detailsViewDescriptor.currencySymbol : "EUR"}}</div>
     </ng-container>
   </ng-container>
