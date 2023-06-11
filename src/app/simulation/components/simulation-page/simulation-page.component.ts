@@ -128,6 +128,7 @@ export class SimulationPageComponent {
       totalInterest - (totalInterest * capitalGainTax) / 100;
     const totalNet: number = totalInterest <= 0? compoundInterest : netInterest + totalContribution;
     const annualWithdraw : number = totalNet * safeWithdrawRate / 100;
+    const monthlyWithdraw : number = annualWithdraw / 12;
 
     this.detailsViewDescriptors = [
       {
@@ -164,6 +165,12 @@ export class SimulationPageComponent {
         hidden: false,
         label: 'Prelievo netto (annuo)',
         value: annualWithdraw,
+        type: 'Currency',
+      },
+      {
+        hidden: false,
+        label: 'Prelievo netto (mensile)',
+        value: monthlyWithdraw,
         type: 'Currency',
       }
     ];
