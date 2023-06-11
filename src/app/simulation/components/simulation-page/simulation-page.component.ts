@@ -97,19 +97,23 @@ export class SimulationPageComponent {
           Validators.pattern(this.onlyNumbersRegex),
         ]),
         hidden: false,
-        label: 'Tasso di prelievo',
+        label: 'Tasso di prelievo in %',
         type: 'Text',
       }
     ];
   }
   calculate(form: FormGroup) {
-    const principal: number = form.value.principal;
-    const addition: number = form.value.addition;
-    const yearsToGrow: number = form.value.yearsToGrow;
-    const interest: number = form.value.interest;
-    const capitalGainTax: number = form.value.capitalGainTax;
-    const annualTax: number = form.value.annualTax;
-    const safeWithdrawRate : number = form.value.safeWithdrawRate;
+    const principal: number = +form.value.principal;
+    const addition: number = +form.value.addition;
+    const yearsToGrow: number = +form.value.yearsToGrow;
+    const interest: number = +form.value.interest;
+    const capitalGainTax: number = +form.value.capitalGainTax;
+    const annualTax: number = +form.value.annualTax;
+    const safeWithdrawRate : number = +form.value.safeWithdrawRate;
+
+    if (principal === 0 && addition === 0) {
+      return;
+    }
 
     const compoundInterest = this.calculateCompoundInterest(
       principal,
@@ -118,13 +122,13 @@ export class SimulationPageComponent {
       yearsToGrow,
       annualTax
     );
-    const totalContribution: number = addition * yearsToGrow + +principal;
+    const totalContribution: number = addition * yearsToGrow + principal;
     const totalInterest: number = compoundInterest - totalContribution;
     const netInterest: number =
       totalInterest - (totalInterest * capitalGainTax) / 100;
-    const totalNet = netInterest + +totalContribution;
-    const annualWithdraw = totalNet * safeWithdrawRate / 100;
-
+    const totalNet: number = netInterest + totalContribution;
+    const annualWithdraw : number = totalNet * safeWithdrawRate / 100;
+debugger
     this.detailsViewDescriptors = [
       {
         hidden: false,
@@ -175,8 +179,7 @@ export class SimulationPageComponent {
   ): number {
     const i = r / 100 - annualTax / 100;
 
-    const principalFutureValue = p * Math.pow(1 + i, y);
-    const annualAdditionFutureValue = (a / i) * Math.pow(1 + i, y) - a / i;
-    return annualAdditionFutureValue + principalFutureValue;
+    const compoundInterest = p * Math.pow(1 + i, y) + a *((Math.pow((1+i), y)-1) / (i));
+    return compoundInterest;
   }
 }
