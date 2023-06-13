@@ -1,0 +1,46 @@
+<app-page-title-bar
+  [title]="this.pageTitle"
+  (onAddEvent)="this.showAddMovementForm()"
+  [cancelButtonVisible]="false"
+></app-page-title-bar>
+
+<ng-container *ngIf="showTable()">
+  <app-r-table
+    [headerVisible]="false"
+    [entities$]="this.movements$"
+    [columns]="this.displayedColumns"
+    (onEditEntityEvent)="this.showEditMovementForm($event)"
+    (onDeleteEntityEvent)="this.deleteMovement($event)"
+    (onOpenDetailsEvent)="this.showMovementDetails($event)"
+  ></app-r-table>
+</ng-container>
+
+<ng-container *ngIf="addFormEnabled"
+  ><div class="content">
+    <app-cu-form
+      [formControlDescriptors]="addFormControlDescriptors"
+      [submitButtonText]="'INSERISCI'"
+      (submitFormEvent)="addMovement($event)"
+      (cancelFormEvent)="onCancelForm()"
+    ></app-cu-form></div
+></ng-container>
+
+<ng-container *ngIf="editFormEnabled"
+  ><div class="content">
+    <app-cu-form
+      [formControlDescriptors]="editFormControlDescriptors"
+      [submitButtonText]="'MODIFICA'"
+      (submitFormEvent)="editMovement($event)"
+      (cancelFormEvent)="onCancelForm()"
+    ></app-cu-form></div
+></ng-container>
+
+<ng-container *ngIf="detailsViewEnabled">
+  <div class="content">
+    <app-generic-view
+      [detailsViewDescriptors]="this.detailsViewDescriptors"
+      [backButtonText]="'INDIETRO'"
+      (OnBackEvent)="onCancelForm()"
+    ></app-generic-view>
+  </div>
+</ng-container>

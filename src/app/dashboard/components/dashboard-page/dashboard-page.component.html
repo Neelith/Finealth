@@ -1,0 +1,31 @@
+<app-page-title-bar
+  [title]="this.pageTitle"
+  [addButtonVisible]="false"
+  [cancelButtonVisible]="isSearchFiltered"
+  (onCancelEvent)="this.resetChartData()"
+></app-page-title-bar>
+<ng-container>
+  <div class="center">
+    <app-date-range-picker
+      (OnDateRangeSelection)="this.filterChartData($event)"
+    ></app-date-range-picker>
+  </div>
+</ng-container>
+<mat-divider></mat-divider>
+<ng-container>
+  <div
+    echarts
+    [autoResize]="true"
+    [options]="categoryChartOptions"
+    [merge]="categoryChartUpdateOptions"
+  ></div>
+</ng-container>
+<mat-divider></mat-divider>
+<ng-container>
+  <div
+    echarts
+    [autoResize]="true"
+    [options]="cashMovementTypeChartOptions"
+    [merge]="cashMovementTypeChartUpdateOptions"
+  ></div>
+</ng-container>

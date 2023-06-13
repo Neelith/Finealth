@@ -1,0 +1,33 @@
+<app-page-title-bar
+  [title]="this.pageTitle"
+  [addButtonVisible]="false"
+  [cancelButtonVisible]="false"
+></app-page-title-bar>
+<mat-tab-group animationDuration="0ms">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">account_balance_wallet</mat-icon>
+    </ng-template>
+
+    <div class="content">
+      <app-cu-form
+        [formControlDescriptors]="compoundFormControlDescriptors"
+        [submitButtonText]="'CALCOLA'"
+        [cancelButtonVisible]="false"
+        (submitFormEvent)="calculate($event)"
+      ></app-cu-form>
+      <ng-container *ngIf="showResultView">
+        <app-generic-view
+          [detailsViewDescriptors]="this.detailsViewDescriptors"
+          [backButtonEnabled]="false"
+        ></app-generic-view>
+      </ng-container>
+    </div>
+  </mat-tab>
+  <!-- <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">account_balance</mat-icon>
+    </ng-template>
+    Content 2</mat-tab
+  > -->
+</mat-tab-group>

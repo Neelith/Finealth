@@ -1,0 +1,12 @@
+<mat-toolbar color="primary" class="titleBar"
+  ><span>{{ this.title | uppercase }}</span>
+  <span class="spacer"></span>
+  <button *ngIf="addButtonVisible" mat-icon-button aria-label="add icon" (click)="this.onAdd()">
+    <mat-icon>add</mat-icon>
+  </button>
+  <button *ngIf="cancelButtonVisible" mat-icon-button aria-label="cancel icon" (click)="this.onCancel()">
+    <mat-icon>cancel</mat-icon>
+  </button>
+
+  </mat-toolbar
+>

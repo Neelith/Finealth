@@ -1,0 +1,56 @@
+<mat-toolbar color="primary">
+  <span class="title">FINEALTH</span>
+  <span class="spacer"></span>
+  <button mat-icon-button aria-label="home icon" (click)="this.navigateTo('/')">
+    <mat-icon>home</mat-icon>
+  </button>
+
+  <button
+    mat-icon-button
+    aria-label="login icon"
+    (click)="this.navigateTo('/login')"
+  >
+    <mat-icon>person</mat-icon>
+  </button>
+
+  <button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button
+      mat-menu-item
+      aria-label="dashboard button"
+      (click)="this.navigateTo('/dashboard')"
+    >
+      <mat-icon class="theme-color">bar_chart</mat-icon>
+      <span>DASHBOARD</span>
+    </button>
+
+    <button
+      mat-menu-item
+      aria-label="movements button"
+      (click)="this.navigateTo('/movements')"
+    >
+      <mat-icon class="theme-color">attach_money</mat-icon>
+      <span>MOVIMENTI</span>
+    </button>
+
+    <button
+      mat-menu-item
+      aria-label="categories button"
+      (click)="this.navigateTo('/categories')"
+    >
+      <mat-icon class="theme-color">list</mat-icon>
+      <span>CATEGORIE</span>
+    </button>
+
+    <button
+      mat-menu-item
+      aria-label="simulation button"
+      (click)="this.navigateTo('/simulation')"
+    >
+      <mat-icon class="theme-color">apps</mat-icon>
+      <span>SIMULATORI</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>

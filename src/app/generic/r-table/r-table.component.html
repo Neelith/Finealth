@@ -1,0 +1,86 @@
+<table mat-table [dataSource]="dataSource" class="table">
+  <ng-container
+    *ngFor="let columnDescriptor of columns"
+    [matColumnDef]="columnDescriptor.field"
+  >
+    <th mat-header-cell *matHeaderCellDef>{{ columnDescriptor.header }}</th>
+    <td mat-cell *matCellDef="let entity">
+      <ng-container
+        *ngIf="
+          columnDescriptor.type === 'text' || columnDescriptor.type === 'number'
+        "
+      >
+        <span>{{ entity[columnDescriptor.field] }}</span>
+      </ng-container>
+
+      <ng-container *ngIf="columnDescriptor.type === 'icon'">
+        <img class="icon" matListItemAvatar [src]="entity.iconUrl" alt="icon" />
+      </ng-container>
+
+      <ng-container *ngIf="columnDescriptor.type === 'currency'">
+        <span>{{
+          entity[columnDescriptor.field]
+            | currency
+              : (columnDescriptor.currencySymbol
+                  ? columnDescriptor.currencySymbol
+                  : "EUR")
+        }}</span>
+      </ng-container>
+
+      <ng-container *ngIf="columnDescriptor.type === 'date'">
+        <span>{{
+          entity[columnDescriptor.field]
+            | date
+              : (columnDescriptor.dateFormat
+                  ? columnDescriptor.dateFormat
+                  : "dd MMM")
+        }}</span>
+      </ng-container>
+
+      <ng-container *ngIf="columnDescriptor.type === 'actions'">
+        <button color="primary" mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button
+            *ngIf="this.detailsButtonVisible"
+            mat-menu-item
+            aria-label="Details button"
+            (click)="onOpenDetails(entity)"
+          >
+            <mat-icon color="primary">description</mat-icon>
+            <span>DETTAGLI</span>
+          </button>
+
+          <button
+            mat-menu-item
+            aria-label="Edit button"
+            (click)="onEditEntity(entity)"
+          >
+            <mat-icon color="primary">settings</mat-icon>
+            <span>MODIFICA</span>
+          </button>
+
+          <button
+            mat-menu-item
+            aria-label="Edit button"
+            (click)="onDeleteEntity(entity)"
+          >
+            <mat-icon color="warn">delete</mat-icon>
+            <span>ELIMINA</span>
+          </button>
+        </mat-menu>
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <ng-container *ngIf="headerVisible">
+    <tr mat-header-row *matHeaderRowDef="this.getColumnNames(columns)"></tr
+  ></ng-container>
+  <tr mat-row *matRowDef="let row; columns: this.getColumnNames(columns)"></tr>
+</table>
+<mat-paginator
+              [pageSize]="25"
+              [pageSizeOptions]="[10, 25, 50, 100]"
+              aria-label="Select page">
+</mat-paginator>

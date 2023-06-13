@@ -1,0 +1,36 @@
+<app-page-title-bar
+  [title]="this.pageTitle"
+  (onAddEvent)="this.showAddCategoryForm()"
+  [cancelButtonVisible]="false"
+></app-page-title-bar>
+
+<ng-container *ngIf="showTable()">
+  <app-r-table
+    [headerVisible]="false"
+    [entities$]="this.categories$"
+    [columns]="this.displayedColumns"
+    [detailsButtonVisible]="false"
+    (onEditEntityEvent)="this.showEditCategoryForm($event)"
+    (onDeleteEntityEvent)="this.deleteCategory($event)"
+  ></app-r-table>
+</ng-container>
+
+<ng-container *ngIf="addFormEnabled"
+  ><div class="content">
+    <app-cu-form
+      [formControlDescriptors]="addFormControlDescriptors"
+      [submitButtonText]="'Inserisci'"
+      (submitFormEvent)="addCategory($event)"
+      (cancelFormEvent)="onCancelForm()"
+    ></app-cu-form></div
+></ng-container>
+
+<ng-container *ngIf="editFormEnabled"
+  ><div class="content">
+    <app-cu-form
+      [formControlDescriptors]="editFormControlDescriptors"
+      [submitButtonText]="'Modifica'"
+      (submitFormEvent)="editCategory($event)"
+      (cancelFormEvent)="onCancelForm()"
+    ></app-cu-form></div
+></ng-container>

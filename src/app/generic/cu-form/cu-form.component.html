@@ -1,0 +1,84 @@
+<form [formGroup]="form" [ngClass]="{'larger-screen': this.isScreenMoreThanSmall}">
+  <ng-container *ngFor="let formControlDescriptor of formControlDescriptors">
+    <ng-container
+      *ngIf="
+        !formControlDescriptor.hidden && formControlDescriptor.type === 'Text'
+      "
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>{{ formControlDescriptor.label }}</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="{{ formControlDescriptor.formControlName }}"
+        />
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container
+      *ngIf="
+        !formControlDescriptor.hidden && formControlDescriptor.type === 'Date'
+      "
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>{{ formControlDescriptor.label }}</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="{{ formControlDescriptor.formControlName }}"
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker color="primary"></mat-datepicker>
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container
+      *ngIf="
+        !formControlDescriptor.hidden &&
+        formControlDescriptor.type === 'IconSelect'
+      "
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>{{ formControlDescriptor.label }}</mat-label>
+        <mat-select formControlName="{{ formControlDescriptor.formControlName }}">
+          <mat-option *ngFor="let iconSelectOptionKey of this.getIconSelectOptionKeys(formControlDescriptor.iconSelectOptions)" [value]="this.getValueFromOptions(formControlDescriptor.iconSelectOptions, iconSelectOptionKey)">
+            <img class="image" matListItemAvatar [src]="this.getSrcFromOptions(formControlDescriptor.iconSelectOptions, iconSelectOptionKey)" alt="icon" />
+            <p class="text">{{ iconSelectOptionKey }}</p>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container
+      *ngIf="
+        !formControlDescriptor.hidden &&
+        formControlDescriptor.type === 'Select'
+      "
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>{{ formControlDescriptor.label }}</mat-label>
+        <mat-select formControlName="{{ formControlDescriptor.formControlName }}">
+          <mat-option *ngFor="let option of formControlDescriptor.selectOptions" [value]="option">
+            <p class="text">{{ option }}</p>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+  </ng-container>
+
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="form.invalid"
+    (click)="onSubmitFormEvent()"
+  >
+    {{ submitButtonText }}
+  </button>
+  <button *ngIf="cancelButtonVisible" mat-raised-button (click)="onCancelFormEvent()">
+    {{ cancelButtonText }}
+  </button>
+</form>
