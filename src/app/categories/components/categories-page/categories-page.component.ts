@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageTitleBarComponent } from 'src/app/page-title-bar/page-title-bar.component';
-import { Category } from 'src/app/entities/model/Category';
 import { Observable, Subscription } from 'rxjs';
 import { CategoryRepositoryService } from '../../../indexedDb/repositories/category-repository/category-repository.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -14,6 +13,7 @@ import { NotificationService } from 'src/app/services/notification/notification.
 import { IconSelectOption } from 'src/app/entities/dto/IconSelectOption';
 import { TableColumnDescriptor } from 'src/app/entities/dto/TableColumnDescriptor';
 import { RTableComponent } from 'src/app/generic/r-table/r-table.component';
+import { Category } from 'src/app/entities/model/Category';
 
 @Component({
   selector: 'app-categories-page',
