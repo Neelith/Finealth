@@ -4,12 +4,14 @@ import { CategoriesPageComponent } from './categories/components/categories-page
 import { CashMovementsPageComponent } from './cash-movements/components/cash-movements-page/cash-movements-page.component';
 import { DashboardPageComponent } from './dashboard/components/dashboard-page/dashboard-page.component';
 import { SimulationPageComponent } from './simulation/components/simulation-page/simulation-page.component';
+import { LoginPageComponent } from './login/components/login-page/login-page.component';
 
 const routes: Routes = [
   { path: 'movements', component: CashMovementsPageComponent },
   { path: 'categories', component: CategoriesPageComponent },
   { path: 'dashboard', component: DashboardPageComponent },
   { path: 'simulation', component: SimulationPageComponent },
+  { path: 'login', component: LoginPageComponent },
   { path: '',  component: CashMovementsPageComponent  }
 ];
 
