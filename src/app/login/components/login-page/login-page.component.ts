@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login-page',
@@ -10,4 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginPageComponent {
 
+  constructor(private HttpClient : HttpClient) {
+    this.HttpClient.get('/.auth/me').subscribe(response => console.log(response));
+  }
 }
